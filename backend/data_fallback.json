@@ -1,0 +1,2377 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "System Admin",
+      "email": "admin@platform.com",
+      "password_hash": "$2a$10$j0hQHumpPXDIY7s0FgQbqeyJTMntRDWnPxqmPRWMFDdhNm4lxTce.",
+      "role": "admin",
+      "created_at": "2026-08-13T11:55:31.495Z"
+    },
+    {
+      "id": 2,
+      "name": "Alex Johnson",
+      "email": "student@example.com",
+      "password_hash": "$2a$10$jDV3E4aJUAMeVIGrUzew2OhsrsrDr//GzpS6byf1ebonHvsVDR8gO",
+      "role": "student",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 3,
+      "name": "Chakala Jalasree",
+      "email": "jalasreechakala@gmail.com",
+      "password_hash": "$2a$10$cefQoS50vPHISGcf81m.vOCSZtrDr2GtdQo27KnBS1dyQVahtTQFe",
+      "role": "student",
+      "created_at": "2026-08-13T12:09:37.459Z"
+    },
+    {
+      "id": 4,
+      "name": "Sarah Connor",
+      "email": "sarah.connor@mit.edu",
+      "password_hash": "$2a$10$mpswTlmjTtsoctyF4SePmeUaz1BPNMLaSiaGPJiuhazWn4IIDlFR.",
+      "role": "student",
+      "created_at": "2026-08-13T12:27:03.824Z"
+    },
+    {
+      "id": 5,
+      "name": "College Tester",
+      "email": "tester_1786625683209@college.edu",
+      "password": "$2a$10$v66He4/eRLmuuETJAC0iaOAxflsy6ETQk2OOU7RKSAiJcYopXzT/S",
+      "role": "student",
+      "created_at": "2026-08-13T12:54:43.388Z"
+    },
+    {
+      "id": 6,
+      "name": "Authentication Tester",
+      "email": "auth_tester_1786628042696@university.edu",
+      "password": "$2a$10$84sjjqgBcZKAp00hGmQb2On1v27Ul8Fc/3fn7sD8ERe5NwSZIdpPi",
+      "role": "student",
+      "created_at": "2026-08-13T13:34:02.904Z"
+    },
+    {
+      "id": 7,
+      "name": "devi",
+      "email": "devi@gmail.com",
+      "password": "$2a$10$x2MUPXZtfe2.H.WvA4uGZeH2BPrEorV5tgio97a5QVsmIedbKkuiu",
+      "role": "student",
+      "created_at": "2026-08-13T13:37:35.999Z"
+    },
+    {
+      "id": 8,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1786858191202@platform.edu",
+      "password": "$2a$10$W8Ok2J7q3uj9wlbJgRzGVO.thIngg83AUzG/dPLNRpDnzkv8OrRaG",
+      "role": "student",
+      "created_at": "2026-08-16T05:29:59.138Z"
+    },
+    {
+      "id": 9,
+      "name": "College Tester",
+      "email": "tester_1786858213216@college.edu",
+      "password": "$2a$10$nUtklORRwtNx1a4ryxTnoO9/5jCpQSNpNEDsLguzSq15o4s.2nV8S",
+      "role": "student",
+      "created_at": "2026-08-16T05:30:13.483Z"
+    },
+    {
+      "id": 10,
+      "name": "Authentication Tester",
+      "email": "auth_tester_1786858227181@university.edu",
+      "password": "$2a$10$ofHndVZg5YWQv1QnI/Zxc.xeVD7mmsjNr0SCSxsHWqwWEUiyBUKQq",
+      "role": "student",
+      "created_at": "2026-08-16T05:30:27.306Z"
+    },
+    {
+      "id": 11,
+      "name": "College Tester",
+      "email": "tester_1786859708579@college.edu",
+      "password": "$2a$10$lFCfyqDrEOaWhnYD61tzluhtVhp3no7MVwYnCVepQFOiLgQWC9N1e",
+      "role": "student",
+      "created_at": "2026-08-16T05:55:08.750Z"
+    },
+    {
+      "id": 12,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1786859717031@platform.edu",
+      "password": "$2a$10$0l4SwxghjEejLgcMsx0HeetbO4oW55jQXepxo7dvqm7m6RIFTLJ/m",
+      "role": "student",
+      "created_at": "2026-08-16T05:55:17.158Z"
+    },
+    {
+      "id": 13,
+      "name": "Student Tester",
+      "email": "student_tester_1786859729555@platform.edu",
+      "password": "$2a$10$hsvTdmTyx1tUZ7srsKgsrOrAjQjsNJnvOrF2iS6G3vLd0aTasDFIG",
+      "role": "student",
+      "created_at": "2026-08-16T05:55:29.693Z"
+    },
+    {
+      "id": 14,
+      "name": "Student Tester",
+      "email": "student_tester_1786860058663@platform.edu",
+      "password": "$2a$10$yqUmYBAVhtuE56LD2KGAb.7Xxz0Wsvercb78eied0Qqq4o8SO.BEO",
+      "role": "student",
+      "created_at": "2026-08-16T06:00:58.880Z"
+    },
+    {
+      "id": 15,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1786860066791@platform.edu",
+      "password": "$2a$10$E9QSewu/QdaNXPDFjxWJ9.vVXempb6rvbn2AzscUaEEUdA/x4jDZu",
+      "role": "student",
+      "created_at": "2026-08-16T06:01:07.034Z"
+    },
+    {
+      "id": 16,
+      "name": "Student Tester",
+      "email": "student_tester_1786860517841@platform.edu",
+      "password": "$2a$10$SreSd3xIo377sGuYQTxxt.nLoIoAHYgDddUE1EVZbVkp6RH8FgI.u",
+      "role": "student",
+      "created_at": "2026-08-16T06:08:37.997Z"
+    },
+    {
+      "id": 17,
+      "name": "College Tester",
+      "email": "tester_1786860525519@college.edu",
+      "password": "$2a$10$FbJDgNP7ybD0w8a.FE1GgOpMWiCnd3x0hJJ77eyiG1MFP1Zgdl6aK",
+      "role": "student",
+      "created_at": "2026-08-16T06:08:45.653Z"
+    },
+    {
+      "id": 18,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1786860533139@platform.edu",
+      "password": "$2a$10$Ni/umXT2THH7Bz5lkCfEEezmDwMVcCk5p3vgNogxvE1wEa1gpn.yK",
+      "role": "student",
+      "created_at": "2026-08-16T06:08:53.323Z"
+    },
+    {
+      "id": 19,
+      "name": "mom",
+      "email": "mom@gmail.com",
+      "password": "$2a$10$rxFngOAgsYP2VLYs8Yn7/.0W2PGO2csMQzSS8NgMnoXwMEsygAHzq",
+      "role": "student",
+      "created_at": "2026-08-16T06:52:03.322Z"
+    },
+    {
+      "id": 20,
+      "name": "a",
+      "email": "a@gmail.cm",
+      "password": "$2a$10$z350/w8IUr5sXADYxi6OGevJxugBw18TLXhSFNnAnSql7A5PL9.Qu",
+      "role": "student",
+      "created_at": "2026-08-16T08:00:22.270Z"
+    },
+    {
+      "id": 21,
+      "name": "b",
+      "email": "b@gmail.com",
+      "password": "$2a$10$KxpSGE5Of9rrH/n4tZ/Qqu2WuvuqNz/0uB/yC76qlTwDXn70iHlmC",
+      "role": "student",
+      "created_at": "2026-08-17T11:37:55.508Z"
+    },
+    {
+      "id": 22,
+      "name": "College Tester",
+      "email": "tester_1786981112977@college.edu",
+      "password": "$2a$10$1telQhaJQZbEHXu8L6X8eObt7fYuK2Wdjrwz2CpKh12G2TnlOSA8W",
+      "role": "student",
+      "created_at": "2026-08-17T15:38:33.132Z"
+    },
+    {
+      "id": 23,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1786981128628@platform.edu",
+      "password": "$2a$10$jQ7gcdYcZR0ZR4mJ64UWR.OCuFhRDSTrhyLotxbD47Oevo.6aQdA.",
+      "role": "student",
+      "created_at": "2026-08-17T15:38:48.764Z"
+    },
+    {
+      "id": 24,
+      "name": "Student Tester",
+      "email": "student_tester_1786981139391@platform.edu",
+      "password": "$2a$10$7bxtmJ7n0QDjJqufxWqaeOaQ1WgVbOiG1M9F.MSec/evVZjjRIA.W",
+      "role": "student",
+      "created_at": "2026-08-17T15:38:59.517Z"
+    },
+    {
+      "id": 25,
+      "name": "Student A",
+      "email": "student_a_1786981436826@example.com",
+      "password": "$2a$10$YwmOm7kr1/N9gEsvRtfMkuYezZQrp9BQfLPm2ccvsx/1vVsaDQe4q",
+      "role": "student",
+      "created_at": "2026-08-17T15:43:57.040Z"
+    },
+    {
+      "id": 26,
+      "name": "Student B",
+      "email": "student_b_1786981437082@example.com",
+      "password": "$2a$10$z9A0CstIrDBDLd6KohWKO.I2czxo8q/emzW6TO.Y.KEozsxM69fay",
+      "role": "student",
+      "created_at": "2026-08-17T15:43:57.279Z"
+    },
+    {
+      "id": 27,
+      "name": "Notes Student A",
+      "email": "notes_student_a_1786981755389@example.com",
+      "password": "$2a$10$0EiNz2cpXNN2C5yowC7cEuX.PEchasEVDXgOQyX50kJiOkiPYbq9C",
+      "role": "student",
+      "created_at": "2026-08-17T15:49:15.524Z"
+    },
+    {
+      "id": 28,
+      "name": "Notes Student B",
+      "email": "notes_student_b_1786981755562@example.com",
+      "password": "$2a$10$oJe8PyS490RMmclvypWh..GyjWngV9QOoY25CFyz9SFDXb/Y.7bgO",
+      "role": "student",
+      "created_at": "2026-08-17T15:49:15.714Z"
+    },
+    {
+      "id": 29,
+      "name": "Notes Student A",
+      "email": "notes_student_a_1786981791370@example.com",
+      "password": "$2a$10$6T9v9vs7AYRYj13Et.jRyOmSACrGffUuqoBhGLeyfkLG8mdzNRyYy",
+      "role": "student",
+      "created_at": "2026-08-17T15:49:51.585Z"
+    },
+    {
+      "id": 30,
+      "name": "Notes Student B",
+      "email": "notes_student_b_1786981791649@example.com",
+      "password": "$2a$10$EbXUaNE5uLDbZzvMA9IJPucbNL/GNryGJvbmHpZW.yS04WX2TD7nu",
+      "role": "student",
+      "created_at": "2026-08-17T15:49:51.880Z"
+    },
+    {
+      "id": 31,
+      "name": "Attendance Student A",
+      "email": "att_student_a_1786982782475@example.com",
+      "password": "$2a$10$1faEKM9LOBMXvnSBPPte5uBNKxDQHhE0h1od/8VY726mOwDE2YuV6",
+      "role": "student",
+      "created_at": "2026-08-17T16:06:22.696Z"
+    },
+    {
+      "id": 32,
+      "name": "Attendance Student B",
+      "email": "att_student_b_1786982782754@example.com",
+      "password": "$2a$10$ZDgI1WEVXar2/J5jobyZq.1q2QlaxXn2V0nAHU5GB2smGxUCU7XYe",
+      "role": "student",
+      "created_at": "2026-08-17T16:06:22.899Z"
+    },
+    {
+      "id": 33,
+      "name": "Attendance Student A",
+      "email": "att_student_a_1786982898960@example.com",
+      "password": "$2a$10$feyCrAj0uCAoqll2VqZhgeQCEAhpwgoSYXHprEyvC2jRz3XbbtMH2",
+      "role": "student",
+      "created_at": "2026-08-17T16:08:19.145Z"
+    },
+    {
+      "id": 34,
+      "name": "Attendance Student B",
+      "email": "att_student_b_1786982899212@example.com",
+      "password": "$2a$10$ZL1r2gGe/zPh74teUSdNVeGblIgq6QvRQoEX4UQThLjWrF18P5trC",
+      "role": "student",
+      "created_at": "2026-08-17T16:08:19.333Z"
+    },
+    {
+      "id": 35,
+      "name": "Attendance Student A",
+      "email": "att_student_a_1786983013758@example.com",
+      "password": "$2a$10$V1S/cjlZbaJ579hGwebJQeXpah0QF51AVDLsRLgFfJ4qYewLIIwjO",
+      "role": "student",
+      "created_at": "2026-08-17T16:10:13.990Z"
+    },
+    {
+      "id": 36,
+      "name": "Attendance Student B",
+      "email": "att_student_b_1786983014050@example.com",
+      "password": "$2a$10$i9coCF1OTmsBmUxnu98iSOZZDZsdoxlqMwKEPtSej1a/kiSvVPP2e",
+      "role": "student",
+      "created_at": "2026-08-17T16:10:14.192Z"
+    },
+    {
+      "id": 37,
+      "name": "CGPA Student A",
+      "email": "cgpa_student_a_1786983298563@example.com",
+      "password": "$2a$10$srgvxpNgz.VU0zhQHxgM4u8HHnYrUcjYMNAp/7MaVVrNMMBE6kj6y",
+      "role": "student",
+      "created_at": "2026-08-17T16:14:58.748Z"
+    },
+    {
+      "id": 38,
+      "name": "CGPA Student B",
+      "email": "cgpa_student_b_1786983298820@example.com",
+      "password": "$2a$10$KNJ0zKTpdzhHiiUOlmr6he48DEBfpMKYhc4ggReiQNNvkheADgrjG",
+      "role": "student",
+      "created_at": "2026-08-17T16:14:58.960Z"
+    },
+    {
+      "id": 39,
+      "name": "CGPA Student A",
+      "email": "cgpa_student_a_1786983361538@example.com",
+      "password": "$2a$10$r5CaFPu2O32doTRsZIgNQOsjbdfzF7vDJMP.QdXnikPDjFPDBXRba",
+      "role": "student",
+      "created_at": "2026-08-17T16:16:01.713Z"
+    },
+    {
+      "id": 40,
+      "name": "CGPA Student B",
+      "email": "cgpa_student_b_1786983361787@example.com",
+      "password": "$2a$10$QTB/QD4e6Z4tUatvNQOtW.svj6Ld2Xa3INcCSVpyRgTFQcKDvebRa",
+      "role": "student",
+      "created_at": "2026-08-17T16:16:01.911Z"
+    },
+    {
+      "id": 41,
+      "name": "Goals Student A",
+      "email": "goal_student_a_1786983575111@example.com",
+      "password": "$2a$10$D75T6swxNknJ993/7vHtQOyL15SNt4zpGahxXonURISO9GpsyU3w.",
+      "role": "student",
+      "created_at": "2026-08-17T16:19:35.442Z"
+    },
+    {
+      "id": 42,
+      "name": "Goals Student B",
+      "email": "goal_student_b_1786983575541@example.com",
+      "password": "$2a$10$8yTncPsrKqcp2XhBlSt49OEWVhaXydOfK3ioYtKBcPTSeSaHWUK1G",
+      "role": "student",
+      "created_at": "2026-08-17T16:19:35.730Z"
+    },
+    {
+      "id": 43,
+      "name": "Goals Student A",
+      "email": "goal_student_a_1786983635074@example.com",
+      "password": "$2a$10$0btFHI52lSPlaLGT45mwOOwdp8iyGJF2zPXF53BqhoyK.F81ITyLq",
+      "role": "student",
+      "created_at": "2026-08-17T16:20:35.302Z"
+    },
+    {
+      "id": 44,
+      "name": "Goals Student B",
+      "email": "goal_student_b_1786983635397@example.com",
+      "password": "$2a$10$xcW8GhDZvswbYQxgkP0qfOmd5Bq9K449VB4WyZyWklfSOKN76.F4O",
+      "role": "student",
+      "created_at": "2026-08-17T16:20:35.526Z"
+    },
+    {
+      "id": 45,
+      "name": "Student Tester",
+      "email": "student_tester_1787058576740@platform.edu",
+      "password": "$2a$10$FbNvbvJeu1gPnuqXYJP/U.nndtqyNSw0MuZRBykDZ.7t86ZLS8t4a",
+      "role": "student",
+      "created_at": "2026-08-18T13:09:36.862Z"
+    },
+    {
+      "id": 46,
+      "name": "College Tester",
+      "email": "tester_1787058584459@college.edu",
+      "password": "$2a$10$kkFybFxFo53e1GK/Aq6lIuPLSpl1q986qxlm.MMOmYfRXS.9pOUMu",
+      "role": "student",
+      "created_at": "2026-08-18T13:09:44.609Z"
+    },
+    {
+      "id": 47,
+      "name": "Competitive Tester",
+      "email": "comp_tester_1787058592613@platform.edu",
+      "password": "$2a$10$HMf4RxTeGfaAXUbqMZXe1Oav68aUHZEV3JvmE1NwL70GeymcEjYR6",
+      "role": "student",
+      "created_at": "2026-08-18T13:09:52.757Z"
+    },
+    {
+      "id": 48,
+      "name": "Authentication Tester",
+      "email": "auth_tester_1787058603554@university.edu",
+      "password": "$2a$10$ktby8MnbX8WD5.k28.pPMOtZYObz4s8W/JAaUTWd6V3sgHCAhf7k6",
+      "role": "student",
+      "created_at": "2026-08-18T13:10:03.678Z"
+    },
+    {
+      "id": 49,
+      "name": "Student A",
+      "email": "student_a_1787058624804@test.com",
+      "password": "$2a$10$22tyI/f15JlOcgo8a7kA8eD5egc4mnGHikNI1BqqRd/hymuY0/Gpi",
+      "role": "student",
+      "created_at": "2026-08-18T13:10:24.970Z"
+    },
+    {
+      "id": 50,
+      "name": "Student B",
+      "email": "student_b_1787058624804@test.com",
+      "password": "$2a$10$.fhhOgs7SqKLrXuL4T75zu9.diK6Bs3Xkhhon7FvkEzSuyyQswgIW",
+      "role": "student",
+      "created_at": "2026-08-18T13:10:25.273Z"
+    },
+    {
+      "id": 51,
+      "name": "Student A",
+      "email": "student_a_1787058685378@test.com",
+      "password": "$2a$10$dsCuXxUSN9nNVuSQjYBXmOqAJoQYtb4HiHkMZHUrtwESE5oBswoGS",
+      "role": "student",
+      "created_at": "2026-08-18T13:11:25.574Z"
+    },
+    {
+      "id": 52,
+      "name": "Student B",
+      "email": "student_b_1787058685378@test.com",
+      "password": "$2a$10$DfdLB4urOqw2eZ4EbpJ1BeiW0LwsFaFeK3tMc4tT3XjYpGlp4T9gS",
+      "role": "student",
+      "created_at": "2026-08-18T13:11:25.747Z"
+    },
+    {
+      "id": 53,
+      "name": "Student A",
+      "email": "student_a_1787058758237@test.com",
+      "password": "$2a$10$1kxfmfYpNLOf8ftDJs.vSOkTBSjITiNm4fWhTmvfYVak/fEljZmPC",
+      "role": "student",
+      "created_at": "2026-08-18T13:12:38.425Z"
+    },
+    {
+      "id": 54,
+      "name": "Student B",
+      "email": "student_b_1787058758237@test.com",
+      "password": "$2a$10$b6Tt2PlSSNryeiOBBeEaxuID6TAfTfxZcwWFyeVto8x.rLuHR1LvK",
+      "role": "student",
+      "created_at": "2026-08-18T13:12:38.572Z"
+    },
+    {
+      "id": 55,
+      "name": "Roadmap Tester",
+      "email": "exam_tester_1787058773655@test.com",
+      "password": "$2a$10$oTJrDyu9qJDc/VAMoLqOUe6IbSH.t2r96z/RxXcgkDRyAEWpjBVSa",
+      "role": "student",
+      "created_at": "2026-08-18T13:12:53.808Z"
+    }
+  ],
+  "student_profiles": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "phone": "+1 555-0199",
+      "institution": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "target_exam_id": 1,
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "phone": "+919347735037",
+      "institution": "jntucep",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "target_exam_id": "2",
+      "created_at": "2026-08-13T12:09:37.460Z"
+    },
+    {
+      "id": 3,
+      "user_id": 4,
+      "phone": "+1 555-0188",
+      "institution": "",
+      "course": "B.Sc",
+      "branch": "Computer Science",
+      "year_of_study": "2nd Year",
+      "target_exam_id": 1,
+      "created_at": "2026-08-13T12:27:03.825Z"
+    },
+    {
+      "id": 4,
+      "user_id": 5,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-13T12:54:43.390Z"
+    },
+    {
+      "id": 5,
+      "user_id": 6,
+      "phone": "+1 555-0133",
+      "college": "Stanford University",
+      "course": "M.S",
+      "branch": "Computer Science",
+      "year_of_study": "1st Year",
+      "created_at": "2026-08-13T13:34:02.906Z"
+    },
+    {
+      "id": 6,
+      "user_id": 7,
+      "phone": "+916305152392",
+      "college": "jntucep",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-13T13:37:36.000Z"
+    },
+    {
+      "id": 7,
+      "user_id": 8,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-16T05:29:59.140Z"
+    },
+    {
+      "id": 8,
+      "user_id": 9,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T05:30:13.485Z"
+    },
+    {
+      "id": 9,
+      "user_id": 10,
+      "phone": "+1 555-0133",
+      "college": "Stanford University",
+      "course": "M.S",
+      "branch": "Computer Science",
+      "year_of_study": "1st Year",
+      "created_at": "2026-08-16T05:30:27.308Z"
+    },
+    {
+      "id": 10,
+      "user_id": 11,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T05:55:08.752Z"
+    },
+    {
+      "id": 11,
+      "user_id": 12,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-16T05:55:17.158Z"
+    },
+    {
+      "id": 12,
+      "user_id": 13,
+      "phone": "+1 555-0155",
+      "college": "BITS Pilani",
+      "course": "B.E",
+      "branch": "Electrical",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T05:55:29.695Z"
+    },
+    {
+      "id": 13,
+      "user_id": 14,
+      "phone": "+1 555-0155",
+      "college": "BITS Pilani",
+      "course": "B.E",
+      "branch": "Electrical",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T06:00:58.884Z"
+    },
+    {
+      "id": 14,
+      "user_id": 15,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-16T06:01:07.040Z"
+    },
+    {
+      "id": 15,
+      "user_id": 16,
+      "phone": "+1 555-0155",
+      "college": "BITS Pilani",
+      "course": "B.E",
+      "branch": "Electrical",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T06:08:37.998Z"
+    },
+    {
+      "id": 16,
+      "user_id": 17,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T06:08:45.654Z"
+    },
+    {
+      "id": 17,
+      "user_id": 18,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-16T06:08:53.324Z"
+    },
+    {
+      "id": 18,
+      "user_id": 19,
+      "phone": "+916305152392",
+      "college": "jntucep",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T06:52:03.324Z"
+    },
+    {
+      "id": 19,
+      "user_id": 20,
+      "phone": "+916305152392",
+      "college": "jntucep",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-16T08:00:22.272Z"
+    },
+    {
+      "id": 20,
+      "user_id": 21,
+      "phone": "+919347735037",
+      "college": "jntucep",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T11:37:55.510Z"
+    },
+    {
+      "id": 21,
+      "user_id": 22,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T15:38:33.134Z"
+    },
+    {
+      "id": 22,
+      "user_id": 23,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-17T15:38:48.765Z"
+    },
+    {
+      "id": 23,
+      "user_id": 24,
+      "phone": "+1 555-0155",
+      "college": "BITS Pilani",
+      "course": "B.E",
+      "branch": "Electrical",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T15:38:59.518Z"
+    },
+    {
+      "id": 24,
+      "user_id": 25,
+      "phone": "",
+      "college": "MIT",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T15:43:57.041Z"
+    },
+    {
+      "id": 25,
+      "user_id": 26,
+      "phone": "",
+      "college": "Stanford",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T15:43:57.280Z"
+    },
+    {
+      "id": 26,
+      "user_id": 27,
+      "phone": "",
+      "college": "Harvard",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T15:49:15.525Z"
+    },
+    {
+      "id": 27,
+      "user_id": 28,
+      "phone": "",
+      "college": "Oxford",
+      "course": "B.Tech",
+      "branch": "Information Technology",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T15:49:15.715Z"
+    },
+    {
+      "id": 28,
+      "user_id": 29,
+      "phone": "",
+      "college": "Harvard",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T15:49:51.588Z"
+    },
+    {
+      "id": 29,
+      "user_id": 30,
+      "phone": "",
+      "college": "Oxford",
+      "course": "B.Tech",
+      "branch": "Information Technology",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T15:49:51.881Z"
+    },
+    {
+      "id": 30,
+      "user_id": 31,
+      "phone": "",
+      "college": "MIT",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T16:06:22.699Z"
+    },
+    {
+      "id": 31,
+      "user_id": 32,
+      "phone": "",
+      "college": "Stanford",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T16:06:22.900Z"
+    },
+    {
+      "id": 32,
+      "user_id": 33,
+      "phone": "",
+      "college": "MIT",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T16:08:19.149Z"
+    },
+    {
+      "id": 33,
+      "user_id": 34,
+      "phone": "",
+      "college": "Stanford",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T16:08:19.334Z"
+    },
+    {
+      "id": 34,
+      "user_id": 35,
+      "phone": "",
+      "college": "MIT",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T16:10:13.993Z"
+    },
+    {
+      "id": 35,
+      "user_id": 36,
+      "phone": "",
+      "college": "Stanford",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T16:10:14.193Z"
+    },
+    {
+      "id": 36,
+      "user_id": 37,
+      "phone": "",
+      "college": "IIT Madras",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T16:14:58.751Z"
+    },
+    {
+      "id": 37,
+      "user_id": 38,
+      "phone": "",
+      "college": "BITS Pilani",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T16:14:58.961Z"
+    },
+    {
+      "id": 38,
+      "user_id": 39,
+      "phone": "",
+      "college": "IIT Madras",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-17T16:16:01.715Z"
+    },
+    {
+      "id": 39,
+      "user_id": 40,
+      "phone": "",
+      "college": "BITS Pilani",
+      "course": "B.Tech",
+      "branch": "Electrical",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-17T16:16:01.912Z"
+    },
+    {
+      "id": 40,
+      "user_id": 41,
+      "phone": "",
+      "college": "IISc Bangalore",
+      "course": "M.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "1st Year",
+      "created_at": "2026-08-17T16:19:35.446Z"
+    },
+    {
+      "id": 41,
+      "user_id": 42,
+      "phone": "",
+      "college": "NIT Trichy",
+      "course": "B.Tech",
+      "branch": "Mechanical",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-17T16:19:35.731Z"
+    },
+    {
+      "id": 42,
+      "user_id": 43,
+      "phone": "",
+      "college": "IISc Bangalore",
+      "course": "M.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "1st Year",
+      "created_at": "2026-08-17T16:20:35.306Z"
+    },
+    {
+      "id": 43,
+      "user_id": 44,
+      "phone": "",
+      "college": "NIT Trichy",
+      "course": "B.Tech",
+      "branch": "Mechanical",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-17T16:20:35.527Z"
+    },
+    {
+      "id": 44,
+      "user_id": 45,
+      "phone": "+1 555-0155",
+      "college": "BITS Pilani",
+      "course": "B.E",
+      "branch": "Electrical",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T13:09:36.865Z"
+    },
+    {
+      "id": 45,
+      "user_id": 46,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T13:09:44.611Z"
+    },
+    {
+      "id": 46,
+      "user_id": 47,
+      "phone": "+1 555-0177",
+      "college": "IIT Bombay",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-18T13:09:52.758Z"
+    },
+    {
+      "id": 47,
+      "user_id": 48,
+      "phone": "+1 555-0133",
+      "college": "Stanford University",
+      "course": "M.S",
+      "branch": "Computer Science",
+      "year_of_study": "1st Year",
+      "created_at": "2026-08-18T13:10:03.679Z"
+    },
+    {
+      "id": 48,
+      "user_id": 49,
+      "phone": "111-111-1111",
+      "college": "Univ A",
+      "course": "B.Tech",
+      "branch": "CS",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-18T13:10:24.972Z"
+    },
+    {
+      "id": 49,
+      "user_id": 50,
+      "phone": "222-222-2222",
+      "college": "Univ B",
+      "course": "B.Tech",
+      "branch": "ECE",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T13:10:25.276Z"
+    },
+    {
+      "id": 50,
+      "user_id": 51,
+      "phone": "111-111-1111",
+      "college": "Univ A",
+      "course": "B.Tech",
+      "branch": "CS",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-18T13:11:25.577Z"
+    },
+    {
+      "id": 51,
+      "user_id": 52,
+      "phone": "222-222-2222",
+      "college": "Univ B",
+      "course": "B.Tech",
+      "branch": "ECE",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T13:11:25.749Z"
+    },
+    {
+      "id": 52,
+      "user_id": 53,
+      "phone": "111-111-1111",
+      "college": "Univ A",
+      "course": "B.Tech",
+      "branch": "CS",
+      "year_of_study": "2nd Year",
+      "created_at": "2026-08-18T13:12:38.427Z"
+    },
+    {
+      "id": 53,
+      "user_id": 54,
+      "phone": "222-222-2222",
+      "college": "Univ B",
+      "course": "B.Tech",
+      "branch": "ECE",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T13:12:38.573Z"
+    },
+    {
+      "id": 54,
+      "user_id": 55,
+      "phone": "555-555-5555",
+      "college": "IIT Madras",
+      "course": "B.Tech",
+      "branch": "CS",
+      "year_of_study": "4th Year",
+      "created_at": "2026-08-18T13:12:53.810Z"
+    }
+  ],
+  "exams": [
+    {
+      "id": 1,
+      "title": "GATE CS & IT",
+      "code": "GATE_CS",
+      "category": "Engineering",
+      "description": "Graduate Aptitude Test in Engineering for Computer Science & IT",
+      "icon": "Cpu",
+      "is_active": 1
+    },
+    {
+      "id": 2,
+      "title": "UPSC Civil Services",
+      "code": "UPSC_CSE",
+      "category": "Government",
+      "description": "Union Public Service Commission Civil Services Examination",
+      "icon": "Award",
+      "is_active": 1
+    },
+    {
+      "id": 3,
+      "title": "SSC CGL",
+      "code": "SSC_CGL",
+      "category": "Staff Selection",
+      "description": "Staff Selection Commission Combined Graduate Level Exam",
+      "icon": "Briefcase",
+      "is_active": 1
+    },
+    {
+      "id": 4,
+      "title": "Banking (IBPS/SBI PO)",
+      "code": "BANK_PO",
+      "category": "Banking",
+      "description": "Probationary Officer Exams for SBI and IBPS",
+      "icon": "DollarSign",
+      "is_active": 1
+    },
+    {
+      "id": 5,
+      "title": "JEE Main & Advanced",
+      "code": "JEE_MAIN",
+      "category": "Engineering Entrance",
+      "description": "Joint Entrance Examination for Engineering Admissions",
+      "icon": "Compass",
+      "is_active": 1
+    },
+    {
+      "id": 6,
+      "title": "NEET UG",
+      "code": "NEET_UG",
+      "category": "Medical Entrance",
+      "description": "National Eligibility cum Entrance Test for Medical",
+      "icon": "Activity",
+      "is_active": 1
+    },
+    {
+      "id": 7,
+      "title": "CAT",
+      "code": "CAT_MBA",
+      "category": "Management",
+      "description": "Common Admission Test for IIMs and Top Business Schools",
+      "icon": "TrendingUp",
+      "is_active": 1
+    },
+    {
+      "id": 8,
+      "title": "RRB NTPC",
+      "code": "RRB_NTPC",
+      "category": "Railways",
+      "description": "Railway Recruitment Board Non-Technical Popular Categories",
+      "icon": "Shield",
+      "is_active": 1
+    },
+    {
+      "id": 9,
+      "title": "APPSC Group 1",
+      "code": "APPSC_G1",
+      "category": "State PSC",
+      "description": "Andhra Pradesh Public Service Commission Executive Services",
+      "icon": "MapPin",
+      "is_active": 1
+    },
+    {
+      "id": 10,
+      "title": "TSPSC Group 1",
+      "code": "TSPSC_G1",
+      "category": "State PSC",
+      "description": "Telangana State Public Service Commission Examination",
+      "icon": "Navigation",
+      "is_active": 1
+    },
+    {
+      "id": 11,
+      "title": "UGC NET",
+      "code": "UGC_NET",
+      "category": "Lectureship & JRF",
+      "description": "National Eligibility Test for Assistant Professor & JRF",
+      "icon": "BookOpen",
+      "is_active": 1
+    }
+  ],
+  "exam_subjects": [
+    {
+      "id": 1,
+      "exam_id": 1,
+      "title": "Computer Networks",
+      "code": "CN",
+      "weightage": "10%"
+    },
+    {
+      "id": 2,
+      "exam_id": 1,
+      "title": "Database Management Systems",
+      "code": "DBMS",
+      "weightage": "9%"
+    },
+    {
+      "id": 3,
+      "exam_id": 1,
+      "title": "Operating Systems",
+      "code": "OS",
+      "weightage": "10%"
+    },
+    {
+      "id": 4,
+      "exam_id": 1,
+      "title": "Data Structures & Algorithms",
+      "code": "DSA",
+      "weightage": "15%"
+    },
+    {
+      "id": 5,
+      "exam_id": 2,
+      "title": "Indian Polity & Governance",
+      "code": "POLITY",
+      "weightage": "18%"
+    },
+    {
+      "id": 6,
+      "exam_id": 2,
+      "title": "Indian History & Culture",
+      "code": "HIST",
+      "weightage": "15%"
+    },
+    {
+      "id": 7,
+      "exam_id": 4,
+      "title": "Quantitative Aptitude",
+      "code": "QUANT",
+      "weightage": "30%"
+    },
+    {
+      "id": 8,
+      "exam_id": 4,
+      "title": "Reasoning Ability",
+      "code": "REASONING",
+      "weightage": "30%"
+    }
+  ],
+  "topics": [
+    {
+      "id": 1,
+      "subject_id": 1,
+      "title": "TCP/IP Architecture & Protocol Suite",
+      "description": "Layers, IP Headers, Packet Routing",
+      "estimated_hours": 4,
+      "order_index": 1
+    },
+    {
+      "id": 2,
+      "subject_id": 1,
+      "title": "IP Addressing & Subnetting",
+      "description": "IPv4 CIDR, Subnet Masks, VLSM",
+      "estimated_hours": 3,
+      "order_index": 2
+    },
+    {
+      "id": 3,
+      "subject_id": 1,
+      "title": "Routing Algorithms (OSPF, BGP, Distance Vector)",
+      "description": "Unicast & Multicast Routing",
+      "estimated_hours": 5,
+      "order_index": 3
+    },
+    {
+      "id": 4,
+      "subject_id": 2,
+      "title": "ER Diagrams & Relational Model",
+      "description": "Keys, Entity sets, ER to Relational schema",
+      "estimated_hours": 3,
+      "order_index": 1
+    },
+    {
+      "id": 5,
+      "subject_id": 2,
+      "title": "SQL & Relational Algebra",
+      "description": "Joins, Subqueries, Functional Dependencies, Normalization",
+      "estimated_hours": 6,
+      "order_index": 2
+    },
+    {
+      "id": 6,
+      "subject_id": 3,
+      "title": "Process Management & Synchronization",
+      "description": "Semaphores, Mutex, Deadlocks",
+      "estimated_hours": 5,
+      "order_index": 1
+    }
+  ],
+  "user_topic_progress": [
+    {
+      "id": 1,
+      "topic_id": 1,
+      "status": "completed"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "topic_id": 1,
+      "status": "in_progress"
+    },
+    {
+      "id": 3,
+      "user_id": 3,
+      "topic_id": 2,
+      "status": "in_progress"
+    },
+    {
+      "id": 4,
+      "user_id": 3,
+      "topic_id": 3,
+      "status": "completed"
+    },
+    {
+      "id": 5,
+      "user_id": 8,
+      "topic_id": 1,
+      "status": "completed"
+    }
+  ],
+  "study_materials": [
+    {
+      "id": 1,
+      "title": "Complete TCP/IP Master Notes & Diagrams",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": 1,
+      "material_type": "pdf",
+      "file_url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "description": "Comprehensive hand-written notes covering TCP/IP stack layers, headers, and flow control.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "title": "Subnetting Cheat Sheet & Practice Formulas",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": 2,
+      "material_type": "ppt",
+      "file_url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "description": "Quick reference slides for CIDR prefix calculation, subnet masks, and broadcast IP formulas.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 3,
+      "title": "GATE 10-Year Previous Solved Questions - DBMS Normalization",
+      "exam_id": 1,
+      "subject_id": 2,
+      "topic_id": 5,
+      "material_type": "pyq",
+      "file_url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      "description": "Compiled past year GATE questions on 3NF, BCNF, and candidate key determination with step-by-step solutions.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 4,
+      "title": "Signals & Systems Complete Formula Sheet",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": null,
+      "material_type": "pdf",
+      "file_url": "http://localhost:5000/uploads/signals_formula_sheet.pdf",
+      "description": "Master formula reference sheet for Continuous & Discrete Fourier Transform.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-16T05:55:29.726Z"
+    },
+    {
+      "id": 5,
+      "title": "Signals & Systems Complete Formula Sheet",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": null,
+      "material_type": "pdf",
+      "file_url": "http://localhost:5000/uploads/signals_formula_sheet.pdf",
+      "description": "Master formula reference sheet for Continuous & Discrete Fourier Transform.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-16T06:00:58.932Z"
+    },
+    {
+      "id": 6,
+      "title": "1",
+      "exam_id": 1,
+      "subject_id": null,
+      "topic_id": null,
+      "material_type": "pdf",
+      "file_url": "http://localhost:5000/uploads/1786860273935-1786628533496-_BATCH_-12_-STUDENT_STUDY_PLANNER.pptx",
+      "description": "",
+      "uploaded_by": 1,
+      "created_at": "2026-08-16T06:04:33.972Z"
+    },
+    {
+      "id": 7,
+      "title": "Signals & Systems Complete Formula Sheet",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": null,
+      "material_type": "pdf",
+      "file_url": "http://localhost:5000/uploads/signals_formula_sheet.pdf",
+      "description": "Master formula reference sheet for Continuous & Discrete Fourier Transform.",
+      "uploaded_by": 1,
+      "created_at": "2026-08-16T06:08:38.028Z"
+    },
+    {
+      "id": 8,
+      "title": "Signals & Systems Complete Formula Sheet",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": null,
+      "material_type": "link",
+      "file_url": "pdf",
+      "description": "http://localhost:5000/uploads/signals_formula_sheet.pdf",
+      "uploaded_by": null,
+      "created_at": "2026-08-17T15:38:59.548Z"
+    },
+    {
+      "id": 9,
+      "title": "Signals & Systems Complete Formula Sheet",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": null,
+      "material_type": "link",
+      "file_url": "pdf",
+      "description": "http://localhost:5000/uploads/signals_formula_sheet.pdf",
+      "uploaded_by": null,
+      "created_at": "2026-08-18T13:09:36.904Z"
+    },
+    {
+      "id": 10,
+      "title": "TCP Congestion Control Explained",
+      "exam_id": 1,
+      "subject_id": 1,
+      "topic_id": 1,
+      "material_type": "link",
+      "file_url": "video",
+      "description": "https://www.youtube.com/watch?v=TCP_Congestion_Control_Explained",
+      "uploaded_by": null,
+      "created_at": "2026-08-18T13:12:53.971Z"
+    }
+  ],
+  "bookmarked_materials": [
+    {
+      "id": 1,
+      "material_id": 1,
+      "created_at": "2026-08-13T13:02:51.478Z"
+    },
+    {
+      "id": 2,
+      "user_id": 8,
+      "material_id": 1,
+      "created_at": "2026-08-16T05:29:59.207Z"
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "subject_id": 1,
+      "topic_id": 1,
+      "question_text": "In the TCP/IP model, which layer is responsible for end-to-end reliability and flow control?",
+      "option_a": "Network Layer",
+      "option_b": "Transport Layer",
+      "option_c": "Data Link Layer",
+      "option_d": "Application Layer",
+      "correct_option": "B",
+      "explanation": "The Transport Layer (specifically TCP) handles end-to-end reliability, sequence numbering, and flow control using sliding windows.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "subject_id": 1,
+      "topic_id": 2,
+      "question_text": "What is the network address for a host with IP 192.168.10.45/28?",
+      "option_a": "192.168.10.0",
+      "option_b": "192.168.10.32",
+      "option_c": "192.168.10.40",
+      "option_d": "192.168.10.16",
+      "correct_option": "B",
+      "explanation": "A /28 subnet mask corresponds to block size of 16 (256 - 240). 45 divided by 16 is 2 remainder 13. Thus, network address is 2 * 16 = 32 (192.168.10.32).",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "subject_id": 2,
+      "topic_id": 5,
+      "question_text": "Which normal form guarantees loss-less join and dependency preservation while eliminating transitive dependencies?",
+      "option_a": "1NF",
+      "option_b": "2NF",
+      "option_c": "3NF",
+      "option_d": "BCNF",
+      "correct_option": "C",
+      "explanation": "3NF guarantees both lossless join and dependency preservation. BCNF guarantees lossless join but may not preserve functional dependencies.",
+      "difficulty": "hard"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": 1,
+      "title": "GATE CN Foundations Quiz - TCP/IP & Subnetting",
+      "exam_id": 1,
+      "subject_id": 1,
+      "time_limit_mins": 15,
+      "total_marks": 10,
+      "created_by": 1,
+      "created_at": "2026-08-13T11:55:31.496Z"
+    }
+  ],
+  "quiz_questions": [
+    {
+      "quiz_id": 1,
+      "question_id": 1
+    },
+    {
+      "quiz_id": 1,
+      "question_id": 2
+    }
+  ],
+  "quiz_results": [
+    {
+      "id": 1,
+      "user_id": 3,
+      "quiz_id": 1,
+      "score": "0.00",
+      "total_questions": 2,
+      "correct_count": 0,
+      "time_taken_seconds": 6,
+      "completed_at": "2026-08-13T12:11:45.509Z"
+    },
+    {
+      "id": 2,
+      "quiz_id": 1,
+      "score": "10.00",
+      "total_questions": 2,
+      "correct_count": 2,
+      "time_taken_seconds": 180,
+      "completed_at": "2026-08-13T13:02:51.492Z"
+    },
+    {
+      "id": 3,
+      "user_id": 8,
+      "quiz_id": 1,
+      "score": "10.00",
+      "total_questions": 2,
+      "correct_count": 2,
+      "time_taken_seconds": 180,
+      "completed_at": "2026-08-16T05:29:59.220Z"
+    },
+    {
+      "id": 4,
+      "user_id": 3,
+      "quiz_id": 1,
+      "score": "0.00",
+      "total_questions": 2,
+      "correct_count": 0,
+      "time_taken_seconds": 2,
+      "completed_at": "2026-08-16T05:35:04.994Z"
+    }
+  ],
+  "mock_tests": [],
+  "mock_test_results": [
+    {
+      "id": 1,
+      "mock_test_id": 1,
+      "score": 80,
+      "percentage": 80,
+      "passed": 1,
+      "weak_subjects_json": "[\"DBMS Normalization\",\"TCP Congestion Control\"]",
+      "completed_at": "2026-08-13T13:02:51.499Z"
+    },
+    {
+      "id": 2,
+      "user_id": 8,
+      "mock_test_id": 1,
+      "score": 80,
+      "percentage": 80,
+      "passed": 1,
+      "weak_subjects_json": "[\"DBMS Normalization\",\"TCP Congestion Control\"]",
+      "completed_at": "2026-08-16T05:29:59.227Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "title": "Complete Software Engineering Lab Report",
+      "description": "Write UML Use-Case & Sequence diagrams for library management system.",
+      "due_date": "2026-08-15",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "title": "Solve 20 GATE TCP/IP PYQs",
+      "description": "Practice sliding window protocol & header format numerical questions.",
+      "due_date": "2026-08-14",
+      "priority": "high",
+      "status": "pending",
+      "category": "exam",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "title": "Computer Networks Project Report",
+      "description": "Write Socket Programming report in C++",
+      "due_date": "2026-11-20",
+      "priority": "high",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-13T12:40:04.328Z"
+    },
+    {
+      "id": 4,
+      "user_id": 5,
+      "title": "Operating Systems Lab 5",
+      "description": "Implement Semaphore Synchronization in C++",
+      "subject_name": "Operating Systems",
+      "due_date": "2026-11-25",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-13T12:54:43.481Z"
+    },
+    {
+      "id": 5,
+      "user_id": 11,
+      "title": "Operating Systems Lab 5",
+      "description": "Implement Semaphore Synchronization in C++",
+      "subject_name": "Operating Systems",
+      "due_date": "2026-11-25",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-16T05:55:08.825Z"
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "title": "os",
+      "description": "1",
+      "subject_name": "Computer Networks",
+      "due_date": null,
+      "priority": "medium",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-16T06:02:46.563Z"
+    },
+    {
+      "id": 7,
+      "user_id": 17,
+      "title": "Operating Systems Lab 5",
+      "description": "Implement Semaphore Synchronization in C++",
+      "subject_name": "Operating Systems",
+      "due_date": "2026-11-25",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-16T06:08:45.712Z"
+    },
+    {
+      "id": 8,
+      "user_id": 3,
+      "title": "os",
+      "description": "1",
+      "subject_name": "Computer Networks",
+      "due_date": "2026-08-06",
+      "priority": "medium",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-16T06:45:33.844Z"
+    },
+    {
+      "id": 9,
+      "user_id": 19,
+      "title": "is",
+      "description": "is",
+      "subject_name": "Computer Networks",
+      "due_date": "2026-08-26",
+      "priority": "medium",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-16T07:02:08.983Z"
+    },
+    {
+      "id": 10,
+      "user_id": 19,
+      "title": "os",
+      "description": "yiu",
+      "subject_name": "Computer Networks",
+      "due_date": "2026-08-27",
+      "priority": "medium",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-16T07:02:26.443Z"
+    },
+    {
+      "id": 11,
+      "user_id": 21,
+      "title": "os",
+      "description": "hi",
+      "subject_name": "Computer Networks",
+      "due_date": null,
+      "priority": "medium",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-17T13:39:05.647Z"
+    },
+    {
+      "id": 12,
+      "user_id": 22,
+      "title": "Operating Systems Lab 5",
+      "description": "Implement Semaphore Synchronization in C++",
+      "subject_name": "Operating Systems",
+      "due_date": "2026-11-25",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-17T15:38:33.200Z"
+    },
+    {
+      "id": 13,
+      "user_id": 46,
+      "title": "Operating Systems Lab 5",
+      "description": "Implement Semaphore Synchronization in C++",
+      "subject_name": "Operating Systems",
+      "due_date": "2026-11-25",
+      "priority": "high",
+      "status": "completed",
+      "category": "college",
+      "created_at": "2026-08-18T13:09:44.700Z"
+    },
+    {
+      "id": 14,
+      "user_id": 50,
+      "title": "Hacked by Student A",
+      "category": "college",
+      "created_at": "2026-08-18T13:10:25.282Z"
+    },
+    {
+      "id": 15,
+      "user_id": 52,
+      "title": "Student B Private Task",
+      "description": "Top secret study plan for Student B",
+      "subject_name": "Algorithms",
+      "due_date": null,
+      "priority": "high",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-18T13:11:25.758Z"
+    },
+    {
+      "id": 16,
+      "user_id": 54,
+      "title": "Student B Private Task",
+      "description": "Top secret study plan for Student B",
+      "subject_name": "Algorithms",
+      "due_date": null,
+      "priority": "high",
+      "status": "pending",
+      "category": "college",
+      "created_at": "2026-08-18T13:12:38.580Z"
+    }
+  ],
+  "notes": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "title": "Operating Systems - Deadlock Prevention vs Avoidance",
+      "content": "# Deadlock Handling\n\n- **Prevention**: Restrict how requests can be made so at least one deadlock condition (Mutual Exclusion, Hold & Wait, No Preemption, Circular Wait) cannot hold.\n- **Avoidance**: Banker's Algorithm requires prior knowledge of maximum resources needed.",
+      "category": "OS",
+      "tags": "gate,college,os",
+      "ai_summary": "Deadlock Prevention negates 1 of 4 conditions. Deadlock Avoidance dynamically inspects resource allocation state using Banker's algorithm.",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "title": "Banker Algorithm & Deadlock Avoidance",
+      "content": "Resource Allocation Graph & Safety Algorithm steps for operating systems.",
+      "category": "Lecture Notes",
+      "tags": "os,deadlock",
+      "ai_summary": null,
+      "created_at": "2026-08-13T12:40:04.341Z"
+    },
+    {
+      "id": 3,
+      "user_id": 5,
+      "title": "TCP/IP Header Architecture & Sliding Window Protocol",
+      "content": "Detailed summary of TCP headers, sequence numbers, and sliding window flow control.",
+      "subject_name": "Computer Networks",
+      "category": "Lecture Notes",
+      "tags": "networks,gate",
+      "ai_summary": null,
+      "created_at": "2026-08-13T12:54:43.497Z"
+    },
+    {
+      "id": 4,
+      "user_id": 11,
+      "title": "TCP/IP Header Architecture & Sliding Window Protocol",
+      "content": "Detailed summary of TCP headers, sequence numbers, and sliding window flow control.",
+      "subject_name": "Computer Networks",
+      "category": "Lecture Notes",
+      "tags": "networks,gate",
+      "created_at": "2026-08-16T05:55:08.841Z"
+    },
+    {
+      "id": 5,
+      "user_id": 17,
+      "title": "TCP/IP Header Architecture & Sliding Window Protocol",
+      "content": "Detailed summary of TCP headers, sequence numbers, and sliding window flow control.",
+      "subject_name": "Computer Networks",
+      "category": "Lecture Notes",
+      "tags": "networks,gate",
+      "created_at": "2026-08-16T06:08:45.725Z"
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "title": "os",
+      "content": "hi",
+      "subject_name": "General",
+      "category": "General",
+      "tags": "gate,os",
+      "created_at": "2026-08-16T06:44:48.487Z"
+    },
+    {
+      "id": 7,
+      "user_id": 22,
+      "title": "TCP/IP Header Architecture & Sliding Window Protocol",
+      "content": "Detailed summary of TCP headers, sequence numbers, and sliding window flow control.",
+      "subject_name": "Computer Networks",
+      "category": "Lecture Notes",
+      "tags": "networks,gate",
+      "created_at": "2026-08-17T15:38:33.215Z"
+    },
+    {
+      "id": 8,
+      "user_id": 46,
+      "title": "TCP/IP Header Architecture & Sliding Window Protocol",
+      "content": "Detailed summary of TCP headers, sequence numbers, and sliding window flow control.",
+      "subject_name": "Computer Networks",
+      "category": "Lecture Notes",
+      "tags": "networks,gate",
+      "created_at": "2026-08-18T13:09:44.715Z"
+    },
+    {
+      "id": 9,
+      "user_id": 54,
+      "title": "Student B Secret Note",
+      "content": "Confidential research notes of Student B",
+      "subject_name": "Algorithms",
+      "category": "General",
+      "tags": "",
+      "created_at": "2026-08-18T13:12:38.587Z"
+    }
+  ],
+  "attendance": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "subject_name": "Operating Systems",
+      "attended_classes": 22,
+      "total_classes": 25,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 4,
+      "user_id": 2,
+      "subject_name": "Theory of Computation",
+      "attended_classes": 15,
+      "total_classes": 20,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 5,
+      "user_id": 3,
+      "subject_name": "os",
+      "attended_classes": 5,
+      "total_classes": 0,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T12:10:31.227Z"
+    },
+    {
+      "id": 6,
+      "user_id": 5,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T12:54:43.502Z"
+    },
+    {
+      "id": 7,
+      "user_id": 5,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "updated_at": "2026-08-13T12:54:43.507Z"
+    },
+    {
+      "id": 8,
+      "user_id": 11,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "created_at": "2026-08-16T05:55:08.847Z"
+    },
+    {
+      "id": 9,
+      "user_id": 11,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "created_at": "2026-08-16T05:55:08.852Z"
+    },
+    {
+      "id": 10,
+      "user_id": 17,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "created_at": "2026-08-16T06:08:45.729Z"
+    },
+    {
+      "id": 11,
+      "user_id": 17,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "created_at": "2026-08-16T06:08:45.734Z"
+    },
+    {
+      "id": 12,
+      "user_id": 3,
+      "subject_name": "maths",
+      "attended_classes": 3,
+      "total_classes": 10,
+      "target_percentage": 75,
+      "created_at": "2026-08-16T06:46:23.700Z"
+    },
+    {
+      "id": 13,
+      "user_id": 22,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T15:38:33.222Z"
+    },
+    {
+      "id": 14,
+      "user_id": 22,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T15:38:33.227Z"
+    },
+    {
+      "id": 15,
+      "user_id": 31,
+      "subject_name": "Computer Networks",
+      "attended_classes": 16,
+      "total_classes": 20,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T16:06:22.724Z"
+    },
+    {
+      "id": 16,
+      "user_id": 31,
+      "subject_name": "Operating Systems",
+      "attended_classes": 15,
+      "total_classes": 15,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T16:06:22.907Z"
+    },
+    {
+      "id": 17,
+      "user_id": 33,
+      "subject_name": "Computer Networks",
+      "attended_classes": 16,
+      "total_classes": 20,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T16:08:19.175Z"
+    },
+    {
+      "id": 18,
+      "user_id": 33,
+      "subject_name": "Operating Systems",
+      "attended_classes": 15,
+      "total_classes": 15,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T16:08:19.339Z"
+    },
+    {
+      "id": 19,
+      "user_id": 35,
+      "subject_name": "Operating Systems",
+      "attended_classes": 15,
+      "total_classes": 15,
+      "target_percentage": 75,
+      "created_at": "2026-08-17T16:10:14.200Z"
+    },
+    {
+      "id": 20,
+      "user_id": 46,
+      "subject_name": "Computer Networks",
+      "attended_classes": 24,
+      "total_classes": 30,
+      "target_percentage": 75,
+      "created_at": "2026-08-18T13:09:44.722Z"
+    },
+    {
+      "id": 21,
+      "user_id": 46,
+      "subject_name": "Database Systems",
+      "attended_classes": 18,
+      "total_classes": 28,
+      "target_percentage": 75,
+      "created_at": "2026-08-18T13:09:44.727Z"
+    }
+  ],
+  "cgpa_records": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "semester": "Semester 1",
+      "gpa": 8.5,
+      "credits": 22
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "semester": "Semester 2",
+      "gpa": 8.8,
+      "credits": 24
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "semester": "Semester 3",
+      "gpa": 8.4,
+      "credits": 22
+    },
+    {
+      "id": 4,
+      "user_id": 2,
+      "semester": "Semester 4",
+      "gpa": 9,
+      "credits": 24
+    },
+    {
+      "id": 5,
+      "user_id": 5,
+      "semester": "Semester 1",
+      "subject_name": "Mathematics I",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-13T12:54:43.518Z"
+    },
+    {
+      "id": 6,
+      "user_id": 11,
+      "semester": "Semester 1",
+      "subject_name": "Mathematics I",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-16T05:55:08.863Z"
+    },
+    {
+      "id": 7,
+      "user_id": 17,
+      "semester": "Semester 1",
+      "subject_name": "Mathematics I",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-16T06:08:45.744Z"
+    },
+    {
+      "id": 8,
+      "user_id": 3,
+      "semester": "Semester 1",
+      "subject_name": "Computer Networks",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-16T06:47:31.525Z"
+    },
+    {
+      "id": 9,
+      "user_id": 3,
+      "semester": "Semester 2",
+      "subject_name": "Computer Networks",
+      "credits": 4,
+      "grade": "B+",
+      "gpa": 8,
+      "created_at": "2026-08-16T06:47:46.151Z"
+    },
+    {
+      "id": 10,
+      "user_id": 22,
+      "semester": "Semester 1",
+      "subject_name": "Mathematics I",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-17T15:38:33.236Z"
+    },
+    {
+      "id": 11,
+      "user_id": 37,
+      "semester": "Semester 1",
+      "subject_name": "Data Structures & Algorithms",
+      "credits": 4,
+      "grade": "S",
+      "gpa": 10,
+      "created_at": "2026-08-17T16:14:58.774Z"
+    },
+    {
+      "id": 12,
+      "user_id": 37,
+      "semester": "Semester 1",
+      "subject_name": "Digital Logic Design",
+      "credits": 3,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-17T16:14:58.780Z"
+    },
+    {
+      "id": 13,
+      "user_id": 37,
+      "semester": "Semester 1",
+      "subject_name": "Discrete Mathematics",
+      "credits": 3,
+      "grade": "B+",
+      "gpa": 8,
+      "created_at": "2026-08-17T16:14:58.784Z"
+    },
+    {
+      "id": 14,
+      "user_id": 37,
+      "semester": "Semester 2",
+      "subject_name": "Operating Systems",
+      "credits": 4,
+      "grade": "A+",
+      "gpa": 10,
+      "created_at": "2026-08-17T16:14:58.796Z"
+    },
+    {
+      "id": 15,
+      "user_id": 39,
+      "semester": "Semester 1",
+      "subject_name": "Data Structures & Algorithms",
+      "credits": 4,
+      "grade": "S",
+      "gpa": 10,
+      "created_at": "2026-08-17T16:16:01.736Z"
+    },
+    {
+      "id": 16,
+      "user_id": 39,
+      "semester": "Semester 1",
+      "subject_name": "Digital Logic Design",
+      "credits": 3,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-17T16:16:01.742Z"
+    },
+    {
+      "id": 18,
+      "user_id": 39,
+      "semester": "Semester 2",
+      "subject_name": "Operating Systems",
+      "credits": 4,
+      "grade": "A+",
+      "gpa": 10,
+      "created_at": "2026-08-17T16:16:01.756Z"
+    },
+    {
+      "id": 19,
+      "user_id": 46,
+      "semester": "Semester 1",
+      "subject_name": "Mathematics I",
+      "credits": 4,
+      "grade": "A",
+      "gpa": 9,
+      "created_at": "2026-08-18T13:09:44.738Z"
+    }
+  ],
+  "goals": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "title": "Achieve AIR < 500 in GATE CS",
+      "target_date": "2027-02-15",
+      "category": "Exam",
+      "progress_percentage": 45,
+      "status": "active",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "title": "Maintain Semester CGPA > 8.5",
+      "target_date": "2026-12-20",
+      "category": "Academic",
+      "progress_percentage": 85,
+      "status": "active",
+      "created_at": "2026-08-13T11:55:31.496Z"
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "title": "Achieve S Grade in Operating Systems",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "active",
+      "created_at": "2026-08-13T12:40:04.354Z"
+    },
+    {
+      "id": 4,
+      "user_id": 5,
+      "title": "Achieve S Grade in Operating Systems",
+      "description": "Score > 90% in End-Sem Exam",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "in_progress",
+      "created_at": "2026-08-13T12:54:43.526Z"
+    },
+    {
+      "id": 5,
+      "user_id": 11,
+      "title": "Achieve S Grade in Operating Systems",
+      "description": "Score > 90% in End-Sem Exam",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "in_progress",
+      "created_at": "2026-08-16T05:55:08.871Z"
+    },
+    {
+      "id": 6,
+      "user_id": 17,
+      "title": "Achieve S Grade in Operating Systems",
+      "description": "Score > 90% in End-Sem Exam",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "in_progress",
+      "created_at": "2026-08-16T06:08:45.750Z"
+    },
+    {
+      "id": 7,
+      "user_id": 3,
+      "title": "goal>9",
+      "description": "none",
+      "target_date": "2026-08-29",
+      "category": "Exam",
+      "progress_percentage": 2,
+      "status": "in_progress",
+      "created_at": "2026-08-16T06:48:22.958Z"
+    },
+    {
+      "id": 8,
+      "user_id": 22,
+      "title": "Achieve S Grade in Operating Systems",
+      "description": "Score > 90% in End-Sem Exam",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "in_progress",
+      "created_at": "2026-08-17T15:38:33.244Z"
+    },
+    {
+      "id": 10,
+      "user_id": 41,
+      "title": "Past Assignment Submission",
+      "description": "Overdue task simulation",
+      "target_date": "2025-01-01",
+      "category": "Academic",
+      "progress_percentage": 50,
+      "status": "in_progress",
+      "created_at": "2026-08-17T16:19:35.520Z"
+    },
+    {
+      "id": 12,
+      "user_id": 43,
+      "title": "Past Assignment Submission",
+      "description": "Overdue task simulation",
+      "target_date": "2025-01-01",
+      "category": "Academic",
+      "progress_percentage": 50,
+      "status": "in_progress",
+      "created_at": "2026-08-17T16:20:35.372Z"
+    },
+    {
+      "id": 13,
+      "user_id": 46,
+      "title": "Achieve S Grade in Operating Systems",
+      "description": "Score > 90% in End-Sem Exam",
+      "target_date": "2026-12-10",
+      "category": "Academic",
+      "progress_percentage": 70,
+      "status": "in_progress",
+      "created_at": "2026-08-18T13:09:44.747Z"
+    }
+  ],
+  "study_sessions": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-13T12:40:04.358Z"
+    },
+    {
+      "id": 2,
+      "user_id": 5,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-13T12:54:43.531Z"
+    },
+    {
+      "id": 3,
+      "user_id": 11,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-16T05:55:08.876Z"
+    },
+    {
+      "id": 4,
+      "user_id": 17,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-16T06:08:45.755Z"
+    },
+    {
+      "id": 5,
+      "user_id": 22,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-17T15:38:33.248Z"
+    },
+    {
+      "id": 6,
+      "user_id": 46,
+      "duration_minutes": 25,
+      "session_type": "pomodoro",
+      "subject_name": "Computer Networks",
+      "created_at": "2026-08-18T13:09:44.752Z"
+    }
+  ],
+  "notifications": [],
+  "study_streaks": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "current_streak": 5,
+      "longest_streak": 12,
+      "last_active_date": "2026-08-13",
+      "badges_json": "[\"5_day_streak\",\"quiz_master\",\"pomodoro_pro\"]"
+    }
+  ],
+  "subtopics": [],
+  "student_exam_targets": [
+    {
+      "id": 1,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-11",
+      "created_at": "2026-08-13T13:02:51.446Z"
+    },
+    {
+      "id": 2,
+      "user_id": 8,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-14",
+      "created_at": "2026-08-16T05:29:59.176Z"
+    },
+    {
+      "id": 3,
+      "user_id": 12,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-14",
+      "created_at": "2026-08-16T05:55:17.175Z"
+    },
+    {
+      "id": 4,
+      "user_id": 15,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-14",
+      "created_at": "2026-08-16T06:01:07.062Z"
+    },
+    {
+      "id": 5,
+      "user_id": 18,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-14",
+      "created_at": "2026-08-16T06:08:53.343Z"
+    },
+    {
+      "id": 6,
+      "user_id": 3,
+      "exam_id": 1,
+      "target_exam_date": "2026-12-14",
+      "created_at": "2026-08-16T06:49:00.333Z"
+    },
+    {
+      "id": 7,
+      "user_id": 19,
+      "exam_id": 2,
+      "target_exam_date": "2026-12-14",
+      "created_at": "2026-08-16T06:52:17.280Z"
+    },
+    {
+      "id": 8,
+      "user_id": 23,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-15",
+      "created_at": "2026-08-17T15:38:48.782Z"
+    },
+    {
+      "id": 9,
+      "user_id": 47,
+      "exam_id": 1,
+      "target_exam_date": "2026-11-16",
+      "created_at": "2026-08-18T13:09:52.778Z"
+    }
+  ],
+  "email_reminders": []
+}

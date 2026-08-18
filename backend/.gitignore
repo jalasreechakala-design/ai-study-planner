@@ -1,0 +1,18 @@
+# Dependency directories
+node_modules/
+
+# Environment files and secrets
+.env
+.env.local
+.env.production
+*.pem
+*.key
+service-account*.json
+
+# Logs
+logs/
+*.log
+
+# Uploaded media files
+uploads/*
+!uploads/.gitkeep
