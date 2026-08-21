@@ -1502,91 +1502,183 @@ class FirestoreService {
     return docData;
   }
 
-  // STREAKS (Firestore: users/{userId}/study_streaks/main)
-  async updateStudyStreak(userId) {
+  // Helper to resolve user document reference reliably across doc IDs, UIDs, and emails
+  async getUserRef(userId) {
     const db = this.firestore;
-    if (!db) return null;
+    if (!db || !userId) return null;
 
-    const streakRef = db.collection('users').doc(String(userId)).collection('study_streaks').doc('main');
-    const docSnap = await streakRef.get();
+    const idStr = String(userId);
 
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
-
-    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-    let currentStreak = 1;
-    let longestStreak = 1;
-    let lastActiveDate = todayStr;
-
-    if (docSnap.exists) {
-      const data = docSnap.data();
-      const prevStreak = Number(data.currentStreak ?? data.current_streak ?? 0);
-      const prevLongest = Number(data.longestStreak ?? data.longest_streak ?? 0);
-      const prevDate = data.lastActiveDate || data.last_active_date || null;
-
-      if (prevDate === todayStr) {
-        // Already studied today - do NOT increment again
-        currentStreak = prevStreak > 0 ? prevStreak : 1;
-        longestStreak = Math.max(prevLongest, currentStreak);
-        lastActiveDate = todayStr;
-      } else if (prevDate === yesterdayStr) {
-        // Studied yesterday - continue streak
-        currentStreak = prevStreak + 1;
-        longestStreak = Math.max(prevLongest, currentStreak);
-        lastActiveDate = todayStr;
-      } else {
-        // Missed one or more days - reset streak to 1
-        currentStreak = 1;
-        longestStreak = Math.max(prevLongest, 1);
-        lastActiveDate = todayStr;
-      }
+    // 1. Direct doc ID
+    const directRef = db.collection('users').doc(idStr);
+    const directSnap = await directRef.get().catch(() => null);
+    if (directSnap && directSnap.exists) {
+      return directRef;
     }
 
-    const streakData = {
-      id: 'main',
-      userId: String(userId),
-      currentStreak,
-      current_streak: currentStreak,
-      longestStreak,
-      longest_streak: longestStreak,
-      lastActiveDate,
-      last_active_date: lastActiveDate,
-      updatedAt: now.toISOString()
-    };
+    // 2. Query by 'uid'
+    const uidSnap = await db.collection('users').where('uid', '==', idStr).limit(1).get().catch(() => null);
+    if (uidSnap && !uidSnap.empty) {
+      return uidSnap.docs[0].ref;
+    }
 
-    await streakRef.set(streakData, { merge: true });
-    return streakData;
+    // 3. Query by 'id'
+    const idSnap = await db.collection('users').where('id', '==', idStr).limit(1).get().catch(() => null);
+    if (idSnap && !idSnap.empty) {
+      return idSnap.docs[0].ref;
+    }
+
+    // 4. Query by 'email'
+    const emailSnap = await db.collection('users').where('email', '==', idStr).limit(1).get().catch(() => null);
+    if (emailSnap && !emailSnap.empty) {
+      return emailSnap.docs[0].ref;
+    }
+
+    return directRef;
+  }
+
+  // REUSABLE STREAK UPDATE FUNCTION (Firestore Transaction)
+  async updateUserStreak(userId, overrideTodayStr = null) {
+    const db = this.firestore;
+    if (!db || !userId) return null;
+
+    const userRef = await this.getUserRef(userId);
+    if (!userRef) return null;
+
+    const now = new Date();
+    const todayStr = overrideTodayStr || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    // Calculate yesterday's date string relative to todayStr
+    const todayParts = todayStr.split('-').map(Number);
+    const todayDateObj = new Date(todayParts[0], todayParts[1] - 1, todayParts[2]);
+    const yesterdayDateObj = new Date(todayDateObj);
+    yesterdayDateObj.setDate(yesterdayDateObj.getDate() - 1);
+    const yesterdayStr = `${yesterdayDateObj.getFullYear()}-${String(yesterdayDateObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayDateObj.getDate()).padStart(2, '0')}`;
+
+    let streakResult = null;
+
+    await db.runTransaction(async (transaction) => {
+      const userDocSnap = await transaction.get(userRef);
+      const userData = userDocSnap.exists ? userDocSnap.data() : {};
+
+      const mainStreakRef = userRef.collection('study_streaks').doc('main');
+      const mainStreakSnap = await transaction.get(mainStreakRef);
+      const mainStreakData = mainStreakSnap.exists ? mainStreakSnap.data() : {};
+
+      const prevStreak = Number(userData.currentStreak ?? userData.current_streak ?? mainStreakData.currentStreak ?? mainStreakData.current_streak ?? 0);
+      const prevLongest = Number(userData.longestStreak ?? userData.longest_streak ?? mainStreakData.longestStreak ?? mainStreakData.longest_streak ?? 0);
+      const prevDate = userData.lastActiveDate || userData.last_active_date || mainStreakData.lastActiveDate || mainStreakData.last_active_date || null;
+
+      let currentStreak = 1;
+      let longestStreak = Math.max(prevLongest, 1);
+
+      if (!prevDate) {
+        // First activity ever
+        currentStreak = 1;
+        longestStreak = Math.max(prevLongest, 1);
+      } else if (prevDate === todayStr) {
+        // Activity already recorded today -> DO NOT INCREMENT AGAIN
+        currentStreak = prevStreak > 0 ? prevStreak : 1;
+        longestStreak = Math.max(prevLongest, currentStreak);
+      } else if (prevDate === yesterdayStr) {
+        // Activity recorded yesterday -> Consecutive day increment!
+        currentStreak = prevStreak + 1;
+        longestStreak = Math.max(prevLongest, currentStreak);
+      } else {
+        // Missed one or more full days -> Reset currentStreak to 1
+        currentStreak = 1;
+        longestStreak = Math.max(prevLongest, 1);
+      }
+
+      if (currentStreak > longestStreak) {
+        longestStreak = currentStreak;
+      }
+
+      streakResult = {
+        currentStreak,
+        longestStreak,
+        lastActiveDate: todayStr,
+        isStreakActiveToday: true,
+        updatedAt: now.toISOString()
+      };
+
+      // 1. Permanently update the authenticated user's document in Firestore
+      transaction.set(userRef, {
+        currentStreak,
+        longestStreak,
+        lastActiveDate: todayStr,
+        current_streak: currentStreak,
+        longest_streak: longestStreak,
+        last_active_date: todayStr,
+        updatedAt: now.toISOString()
+      }, { merge: true });
+
+      // 2. Also keep study_streaks/main subcollection synced
+      transaction.set(mainStreakRef, {
+        id: 'main',
+        userId: String(userId),
+        currentStreak,
+        longestStreak,
+        lastActiveDate: todayStr,
+        current_streak: currentStreak,
+        longest_streak: longestStreak,
+        last_active_date: todayStr,
+        updatedAt: now.toISOString()
+      }, { merge: true });
+    });
+
+    return streakResult;
+  }
+
+  async updateStudyStreak(userId, overrideTodayStr = null) {
+    return this.updateUserStreak(userId, overrideTodayStr);
   }
 
   async getUserStreak(userId) {
     const db = this.firestore;
-    if (!db) {
-      throw new Error('Firebase Firestore is not configured or initialized.');
+    if (!db || !userId) {
+      return { currentStreak: 0, longestStreak: 0, lastActiveDate: null, isStreakActiveToday: false };
     }
 
-    const doc = await db.collection('users').doc(String(userId)).collection('study_streaks').doc('main').get();
-    if (doc.exists) {
-      return this.docWithId(doc);
-    }
+    const userRef = await this.getUserRef(userId);
+    const userDocSnap = await userRef.get().catch(() => null);
 
-    // Return default streak
     const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
-    const defaultStreak = {
-      id: 'main',
-      userId: String(userId),
-      currentStreak: 1,
-      current_streak: 1,
-      longestStreak: 1,
-      longest_streak: 1,
-      lastActiveDate: todayStr,
-      last_active_date: todayStr,
-      updatedAt: now.toISOString()
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const yesterdayObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    const yesterdayStr = `${yesterdayObj.getFullYear()}-${String(yesterdayObj.getMonth() + 1).padStart(2, '0')}-${String(yesterdayObj.getDate()).padStart(2, '0')}`;
+
+    if (userDocSnap && userDocSnap.exists) {
+      const data = userDocSnap.data();
+
+      // Check subcollection fallback if top level fields missing
+      const mainStreakRef = userRef.collection('study_streaks').doc('main');
+      const mainStreakSnap = await mainStreakRef.get().catch(() => null);
+      const mainStreakData = mainStreakSnap && mainStreakSnap.exists ? mainStreakSnap.data() : {};
+
+      const prevStreak = Number(data.currentStreak ?? data.current_streak ?? mainStreakData.currentStreak ?? mainStreakData.current_streak ?? 0);
+      const prevLongest = Number(data.longestStreak ?? data.longest_streak ?? mainStreakData.longestStreak ?? mainStreakData.longest_streak ?? 0);
+      const lastActiveDate = data.lastActiveDate || data.last_active_date || mainStreakData.lastActiveDate || mainStreakData.last_active_date || null;
+
+      let currentStreak = prevStreak;
+      if (lastActiveDate && lastActiveDate !== todayStr && lastActiveDate !== yesterdayStr) {
+        currentStreak = 0;
+      }
+
+      return {
+        currentStreak,
+        longestStreak: prevLongest,
+        lastActiveDate,
+        isStreakActiveToday: lastActiveDate === todayStr
+      };
+    }
+
+    return {
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActiveDate: null,
+      isStreakActiveToday: false
     };
-    await db.collection('users').doc(String(userId)).collection('study_streaks').doc('main').set(defaultStreak);
-    return defaultStreak;
   }
 
   // TOPIC PROGRESS

@@ -17,19 +17,26 @@ export default function CompetitiveDashboard() {
       const res = await competitiveAPI.getDashboardSummary();
       setData(res.data);
     } catch (err) {
-      console.error('Failed to load competitive dashboard');
+      console.error('Failed to load competitive dashboard:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !data) return (
+  if (loading && !data) return (
     <div className="page-wrapper">
       <div style={{ textAlign: 'center', padding: '4rem' }}>
         <p style={{ color: 'var(--text-secondary)' }}>Loading Competitive Exam Dashboard...</p>
       </div>
     </div>
   );
+
+  const selectedExam = data?.selectedExam || { id: 1, title: 'GATE CS & IT', code: 'GATE_CS' };
+  const targetExamDate = data?.targetExamDate || 'Upcoming';
+  const countdown = data?.countdown || { days: 0, hours: 0, minutes: 0 };
+  const performance = data?.performance || { overallPreparationPct: 0, avgQuizScore: 0, avgMockScore: 0, totalStudyHours: '0.0' };
+  const syllabusSummary = data?.syllabusSummary || { completionPercentage: 0, totalTopics: 0, completedTopics: 0, inProgressTopics: 0, pendingTopics: 0 };
+  const recommendation = data?.recommendation || { message: 'Focus on revision and practice questions for optimal preparation.' };
 
   return (
     <div className="page-wrapper">
@@ -53,9 +60,9 @@ export default function CompetitiveDashboard() {
                 Change Exam →
               </button>
             </div>
-            <h1 style={{ fontSize: '2rem', margin: '0.2rem 0' }}>{data.selectedExam.title}</h1>
+            <h1 style={{ fontSize: '2rem', margin: '0.2rem 0' }}>{selectedExam.title}</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0 }}>
-              Target Exam Date: <strong>{data.targetExamDate}</strong>
+              Target Exam Date: <strong>{targetExamDate}</strong>
             </p>
           </div>
 
@@ -70,17 +77,17 @@ export default function CompetitiveDashboard() {
             textAlign: 'center'
           }}>
             <div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{data.countdown.days}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{countdown.days}</div>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Days</span>
             </div>
             <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-muted)' }}>:</div>
             <div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{data.countdown.hours}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{countdown.hours}</div>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Hours</span>
             </div>
             <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-muted)' }}>:</div>
             <div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{data.countdown.minutes}</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--color-competitive)' }}>{countdown.minutes}</div>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Mins</span>
             </div>
           </div>
@@ -88,7 +95,7 @@ export default function CompetitiveDashboard() {
       </div>
 
       {/* Recommended Next Action Banner */}
-      {data.recommendation && (
+      {recommendation && (
         <div className="glass-card" style={{ marginBottom: '1.5rem', background: 'var(--bg-secondary)', borderLeft: '4px solid var(--accent-warning)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
@@ -96,7 +103,7 @@ export default function CompetitiveDashboard() {
                 <Sparkles size={15} /> RECOMMENDED NEXT TOPIC & TASK
               </div>
               <h3 style={{ fontSize: '1.05rem', margin: 0, fontWeight: 600 }}>
-                "{data.recommendation.message}"
+                "{recommendation.message}"
               </h3>
             </div>
 
@@ -112,27 +119,27 @@ export default function CompetitiveDashboard() {
         <div className="glass-card">
           <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Overall Preparation</span>
           <h2 style={{ fontSize: '2rem', marginTop: '0.3rem', color: 'var(--color-competitive)' }}>
-            {data.performance.overallPreparationPct}%
+            {performance.overallPreparationPct}%
           </h2>
           <div className="progress-bar-bg" style={{ marginTop: '0.5rem' }}>
-            <div className="progress-bar-fill" style={{ width: `${data.performance.overallPreparationPct}%`, backgroundColor: 'var(--color-competitive)' }} />
+            <div className="progress-bar-fill" style={{ width: `${performance.overallPreparationPct}%`, backgroundColor: 'var(--color-competitive)' }} />
           </div>
         </div>
 
         <div className="glass-card">
           <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Syllabus Completion</span>
           <h2 style={{ fontSize: '2rem', marginTop: '0.3rem', color: 'var(--accent-primary)' }}>
-            {data.syllabusSummary.completionPercentage}%
+            {syllabusSummary.completionPercentage}%
           </h2>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-            {data.syllabusSummary.completedTopics} of {data.syllabusSummary.totalTopics} topics completed
+            {syllabusSummary.completedTopics} of {syllabusSummary.totalTopics} topics completed
           </span>
         </div>
 
         <div className="glass-card">
           <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Quiz Performance</span>
           <h2 style={{ fontSize: '2rem', marginTop: '0.3rem', color: 'var(--accent-warning)' }}>
-            {data.performance.avgQuizScore}%
+            {performance.avgQuizScore}%
           </h2>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Average topic quiz score</span>
         </div>
@@ -140,7 +147,7 @@ export default function CompetitiveDashboard() {
         <div className="glass-card">
           <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Mock Test Average</span>
           <h2 style={{ fontSize: '2.2rem', marginTop: '0.3rem', color: 'var(--color-ai)' }}>
-            {data.performance.avgMockScore}%
+            {performance.avgMockScore}%
           </h2>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>All-India Mock Papers</span>
         </div>
@@ -200,7 +207,7 @@ export default function CompetitiveDashboard() {
       {/* Navigation Quick Access Grid */}
       <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Platform Navigation</h3>
       <div className="grid-3">
-        <Link to={`/competitive/roadmap?examId=${data.selectedExam.id}`} className="glass-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/competitive/roadmap?examId=${selectedExam.id}`} className="glass-card" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Compass size={28} color="var(--accent-primary)" style={{ marginBottom: '0.5rem' }} />
           <h4 style={{ fontSize: '1.05rem', marginBottom: '0.25rem' }}>Syllabus Roadmap</h4>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Explore subject, topic, and subtopic hierarchies.</p>

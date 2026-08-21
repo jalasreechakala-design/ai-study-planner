@@ -42,6 +42,7 @@ router.delete('/goals/:id', collegeController.deleteGoal);
 // Pomodoro & Sessions & Streaks & Analytics
 router.post('/study-session', collegeController.logStudySession);
 router.get('/streaks-badges', collegeController.getStreaksAndBadges);
+router.post('/streak/update', collegeController.triggerStreakUpdate);
 router.get('/analytics', collegeController.getStudyAnalytics);
 
 // Subjects

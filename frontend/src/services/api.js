@@ -90,6 +90,7 @@ export const collegeAPI = {
 
   logSession: (sessionData) => api.post('/college/study-session', sessionData),
   getStreaksBadges: () => api.get('/college/streaks-badges'),
+  updateStreak: () => api.post('/college/streak/update'),
   getAnalytics: () => api.get('/college/analytics'),
 
   getSubjects: () => api.get('/college/subjects'),

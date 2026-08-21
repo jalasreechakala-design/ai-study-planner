@@ -53,17 +53,24 @@ exports.getDashboardSummary = async (req, res) => {
     const userName = userDoc?.name || req.user.name || 'Student';
     const profile = userDoc?.profile || null;
 
-    const tasks = await firestoreService.getUserTasks(userId);
-    const attData = await firestoreService.getUserAttendance(userId);
-    const cgpaData = await firestoreService.getUserCgpaRecords(userId);
-    const goals = await firestoreService.getUserGoals(userId);
-    const sessionsData = await firestoreService.getUserStudySessions(userId, 'all');
-    const streak = await firestoreService.getUserStreak(userId);
+    const tasks = await firestoreService.getUserTasks(userId).catch(() => []);
+    const attData = await firestoreService.getUserAttendance(userId).catch(() => ({ attendance: [], overallPercentage: 100 }));
+    const cgpaData = await firestoreService.getUserCgpaRecords(userId).catch(() => ({ records: [], cumulativeCGPA: 0, totalCredits: 0 }));
+    const goals = await firestoreService.getUserGoals(userId).catch(() => []);
+    const sessionsData = await firestoreService.getUserStudySessions(userId, 'all').catch(() => ({ allSessions: [] }));
+    const streak = await firestoreService.getUserStreak(userId).catch(() => ({ currentStreak: 0, longestStreak: 0, lastActiveDate: null, isStreakActiveToday: false }));
     const badges = await evaluateBadges(userId);
+
+    const notes = await firestoreService.getUserNotes(userId).catch(() => []);
+    const subjects = await firestoreService.getUserSubjects(userId).catch(() => []);
+    const assignments = await firestoreService.getUserAssignments(userId).catch(() => []);
+    const reminders = await firestoreService.getUserReminders(userId).catch(() => []);
 
     const pendingTasks = tasks.filter(t => t.completed !== true && t.status !== 'completed');
     const completedTasks = tasks.filter(t => t.completed === true || t.status === 'completed');
     const upcomingDeadlines = pendingTasks.slice(0, 5);
+
+    const pendingAssignments = assignments.filter(a => a.completed !== true && a.status !== 'completed');
 
     const allSessions = sessionsData.allSessions || [];
     let todayMinutes = 0;
@@ -87,6 +94,23 @@ exports.getDashboardSummary = async (req, res) => {
         completed: completedTasks.length,
         upcomingDeadlines
       },
+      notesSummary: {
+        total: notes.length,
+        recent: notes.slice(0, 3)
+      },
+      subjectsSummary: {
+        total: subjects.length,
+        list: subjects.slice(0, 4)
+      },
+      assignmentsSummary: {
+        total: assignments.length,
+        pending: pendingAssignments.length,
+        list: pendingAssignments.slice(0, 4)
+      },
+      remindersSummary: {
+        total: reminders.length,
+        list: reminders.slice(0, 4)
+      },
       attendanceSummary: {
         records: attData.attendance || [],
         overallPercentage: attData.overallPercentage || 100
@@ -101,7 +125,10 @@ exports.getDashboardSummary = async (req, res) => {
       studySummary: {
         todayHours: (todayMinutes / 60).toFixed(1),
         totalHours: (totalMinutes / 60).toFixed(1),
-        currentStreak: streak?.currentStreak || streak?.current_streak || 1,
+        currentStreak: streak?.currentStreak ?? streak?.current_streak ?? 0,
+        longestStreak: streak?.longestStreak ?? streak?.longest_streak ?? 0,
+        lastActiveDate: streak?.lastActiveDate || streak?.last_active_date || null,
+        isStreakActiveToday: Boolean(streak?.isStreakActiveToday),
         badges
       }
     });
@@ -181,8 +208,12 @@ exports.updateTask = async (req, res) => {
       category
     });
 
+    let streak = null;
+    if (updated.completed === true || updated.status === 'completed') {
+      streak = await firestoreService.updateUserStreak(userId);
+    }
     await evaluateBadges(userId);
-    return res.json({ message: 'Task updated successfully in Cloud Firestore!', task: updated });
+    return res.json({ message: 'Task updated successfully in Cloud Firestore!', task: updated, streak });
   } catch (err) {
     console.error('updateTask Error:', err.message);
     return res.status(500).json({ error: `Failed to update task in Cloud Firestore: ${err.message}` });
@@ -198,8 +229,13 @@ exports.updateTaskStatus = async (req, res) => {
     const { status, completed } = req.body;
 
     const updated = await firestoreService.updateTaskStatus(userId, id, completed !== undefined ? completed : status);
+
+    let streak = null;
+    if (updated.completed === true || updated.status === 'completed') {
+      streak = await firestoreService.updateUserStreak(userId);
+    }
     await evaluateBadges(userId);
-    return res.json({ message: 'Task status updated in Cloud Firestore!', task: updated });
+    return res.json({ message: 'Task status updated in Cloud Firestore!', task: updated, streak });
   } catch (err) {
     console.error('updateTaskStatus Error:', err.message);
     return res.status(500).json({ error: `Failed to update task status in Cloud Firestore: ${err.message}` });
@@ -492,11 +528,26 @@ exports.logStudySession = async (req, res) => {
     if (!userId) return res.status(401).json({ error: 'User is not authenticated.' });
 
     const session = await firestoreService.recordStudySession(userId, req.body);
+    const streak = await firestoreService.updateUserStreak(userId);
     await evaluateBadges(userId);
-    return res.status(201).json({ message: 'Study session logged to Cloud Firestore!', session });
+    return res.status(201).json({ message: 'Study session logged to Cloud Firestore!', session, streak });
   } catch (err) {
     console.error('logStudySession Error:', err.message);
     return res.status(500).json({ error: `Failed to log study session to Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.triggerStreakUpdate = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'User is not authenticated.' });
+
+    const streak = await firestoreService.updateUserStreak(userId);
+    await evaluateBadges(userId);
+    return res.json({ message: 'Study streak updated successfully!', streak });
+  } catch (err) {
+    console.error('triggerStreakUpdate Error:', err.message);
+    return res.status(500).json({ error: `Failed to update study streak in Cloud Firestore: ${err.message}` });
   }
 };
 
@@ -602,7 +653,12 @@ exports.updateAssignment = async (req, res) => {
 
     const { id } = req.params;
     const updated = await firestoreService.updateAssignment(userId, id, req.body);
-    return res.json({ message: 'Assignment updated in Cloud Firestore!', assignment: updated });
+
+    let streak = null;
+    if (updated.completed === true || updated.status === 'completed') {
+      streak = await firestoreService.updateUserStreak(userId);
+    }
+    return res.json({ message: 'Assignment updated in Cloud Firestore!', assignment: updated, streak });
   } catch (err) {
     console.error('updateAssignment Error:', err.message);
     return res.status(500).json({ error: `Failed to update assignment in Cloud Firestore: ${err.message}` });

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { collegeAPI, aiAPI } from '../../services/api';
-import { GraduationCap, Award, CheckSquare, Clock, Flame, Calendar, Sparkles, ArrowRight, BookOpen, Target, Plus, Play, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Award, CheckSquare, Clock, Flame, Calendar, Sparkles, ArrowRight, BookOpen, Target, Plus, Play, CheckCircle2, FileText, Bell, FolderKanban } from 'lucide-react';
 
 export default function CollegeDashboard() {
   const { user, switchPlatform } = useAuth();
@@ -17,22 +17,30 @@ export default function CollegeDashboard() {
   }, []);
 
   const fetchDashboardData = async () => {
+    setLoading(true);
     try {
-      const [sumRes, aiRes] = await Promise.all([
+      const [sumRes, aiRes] = await Promise.allSettled([
         collegeAPI.getDashboardSummary(),
         aiAPI.getRecommendations()
       ]);
 
-      setSummary(sumRes.data);
-      setAiRec(aiRes.data);
+      if (sumRes.status === 'fulfilled' && sumRes.value?.data) {
+        setSummary(sumRes.value.data);
+      } else {
+        console.error('Dashboard Summary API Error:', sumRes.reason);
+      }
+
+      if (aiRes.status === 'fulfilled' && aiRes.value?.data) {
+        setAiRec(aiRes.value.data);
+      }
     } catch (err) {
-      console.error('Failed to load dashboard summary');
+      console.error('Failed to load dashboard summary:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !summary) {
+  if (loading && !summary) {
     return (
       <div className="page-wrapper" style={{ padding: '3rem 1.5rem' }}>
         <div className="skeleton" style={{ height: '140px', marginBottom: '1.5rem' }}></div>
@@ -53,6 +61,16 @@ export default function CollegeDashboard() {
     return 'Good Evening 👋';
   };
 
+  const tasksData = summary?.taskSummary || { total: 0, pending: 0, completed: 0, upcomingDeadlines: [] };
+  const studyData = summary?.studySummary || { todayHours: '0.0', totalHours: '0.0', currentStreak: 0, longestStreak: 0, isStreakActiveToday: false, badges: [] };
+  const attData = summary?.attendanceSummary || { records: [], overallPercentage: 100 };
+  const cgpaData = summary?.cgpaSummary || { records: [], cumulativeCGPA: 0, totalCredits: 0 };
+  const notesData = summary?.notesSummary || { total: 0, recent: [] };
+  const subjectsData = summary?.subjectsSummary || { total: 0, list: [] };
+  const assignmentsData = summary?.assignmentsSummary || { total: 0, pending: 0, list: [] };
+  const remindersData = summary?.remindersSummary || { total: 0, list: [] };
+  const profileInfo = summary?.profile || user?.profile || {};
+
   return (
     <div className="page-wrapper">
       {/* Hero Header Section */}
@@ -70,11 +88,12 @@ export default function CollegeDashboard() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255, 255, 255, 0.15)', padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.78125rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-              <Calendar size={14} /> {summary.todayDate}
+              <Calendar size={14} /> {summary?.todayDate || new Date().toLocaleDateString()}
             </div>
-            <h1 style={{ fontSize: '2rem', color: '#ffffff', marginBottom: '0.4rem' }}>{getGreeting()}, {user?.name?.split(' ')[0]}</h1>
+            <h1 style={{ fontSize: '2rem', color: '#ffffff', marginBottom: '0.4rem' }}>{getGreeting()}, {user?.name?.split(' ')[0] || 'Student'}</h1>
             <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '0.95rem', margin: 0 }}>
-              Let's make today productive. You have <strong>{summary.taskSummary.pending} pending tasks</strong> and <strong>{summary.studySummary.todayHours || 0} hrs</strong> logged today.
+              Let's make today productive. You have <strong>{tasksData.pending} pending tasks</strong> and <strong>{studyData.todayHours || 0} hrs</strong> logged today.
+              {profileInfo?.course && ` • ${profileInfo.course} (${profileInfo.branch || ''})`}
             </p>
           </div>
 
@@ -113,34 +132,39 @@ export default function CollegeDashboard() {
         </div>
       )}
 
-      {/* Statistics Row */}
+      {/* Statistics Row (4 Cards) */}
       <div className="grid-4" style={{ marginBottom: '2rem' }}>
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Tasks Overview</span>
               <h2 style={{ fontSize: '1.75rem', marginTop: '0.2rem', color: 'var(--text-primary)' }}>
-                {summary.taskSummary.pending}
+                {tasksData.pending}
               </h2>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{summary.taskSummary.completed} completed today</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{tasksData.completed} completed today</span>
             </div>
-            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--warning)', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(217, 119, 6, 0.12)', color: 'var(--warning)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CheckSquare size={20} style={{ margin: 'auto' }} />
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="card" style={{ borderLeft: '3px solid #f59e0b' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Study Hours</span>
-              <h2 style={{ fontSize: '1.75rem', marginTop: '0.2rem', color: 'var(--text-primary)' }}>
-                {summary.studySummary.todayHours || 0}h
+              <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Study Streak</span>
+              <h2 style={{ fontSize: '1.5rem', marginTop: '0.2rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '0.2rem' }}>
+                🔥 {studyData.currentStreak || 0} Day Streak
               </h2>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{summary.studySummary.currentStreak} day streak 🔥</span>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                Longest Streak: <strong>{studyData.longestStreak || 0} days</strong>
+              </div>
+              <div style={{ fontSize: '0.725rem', fontWeight: 600, color: studyData.isStreakActiveToday ? 'var(--success)' : 'var(--warning)', marginTop: '0.25rem' }}>
+                {studyData.isStreakActiveToday ? '🔥 Streak active today' : 'Complete a study activity today to continue your streak.'}
+              </div>
             </div>
-            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(79, 70, 229, 0.12)', color: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
-              <Clock size={20} style={{ margin: 'auto' }} />
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Flame size={20} style={{ margin: 'auto' }} />
             </div>
           </div>
         </div>
@@ -149,12 +173,12 @@ export default function CollegeDashboard() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Attendance Health</span>
-              <h2 style={{ fontSize: '1.75rem', marginTop: '0.2rem', color: summary.attendanceSummary.overallPercentage >= 75 ? 'var(--success)' : 'var(--danger)' }}>
-                {summary.attendanceSummary.overallPercentage}%
+              <h2 style={{ fontSize: '1.75rem', marginTop: '0.2rem', color: attData.overallPercentage >= 75 ? 'var(--success)' : 'var(--danger)' }}>
+                {attData.overallPercentage}%
               </h2>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Target: 75% min</span>
             </div>
-            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(22, 163, 74, 0.12)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(22, 163, 74, 0.12)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Award size={20} style={{ margin: 'auto' }} />
             </div>
           </div>
@@ -165,14 +189,105 @@ export default function CollegeDashboard() {
             <div>
               <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Cumulative CGPA</span>
               <h2 style={{ fontSize: '1.75rem', marginTop: '0.2rem', color: 'var(--accent-primary)' }}>
-                {summary.cgpaSummary.cumulativeCGPA}
+                {cgpaData.cumulativeCGPA}
               </h2>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{summary.cgpaSummary.totalCredits} Credits</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{cgpaData.totalCredits} Credits</span>
             </div>
-            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--accent-primary-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}>
+            <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--accent-primary-light)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <GraduationCap size={20} style={{ margin: 'auto' }} />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Academic Modules Overview Row: Subjects, Notes, Assignments, Reminders */}
+      <div className="grid-4" style={{ marginBottom: '2rem' }}>
+        {/* Subjects Card */}
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <BookOpen size={16} color="var(--primary)" /> Subjects ({subjectsData.total})
+            </span>
+            <Link to="/college/subjects" style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View All →</Link>
+          </div>
+          {subjectsData.list.length === 0 ? (
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No subjects added yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {subjectsData.list.map((sub, idx) => (
+                <div key={sub.id || idx} style={{ fontSize: '0.8rem', padding: '0.35rem 0.6rem', borderRadius: '6px', background: 'var(--surface-secondary)', border: '1px solid var(--border)' }}>
+                  <strong>{sub.subjectName || sub.title || sub.name}</strong>
+                  {sub.code && <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginLeft: '0.4rem' }}>({sub.code})</span>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Recent Notes Card */}
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <FileText size={16} color="var(--secondary)" /> Notes ({notesData.total})
+            </span>
+            <Link to="/college/notes" style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View All →</Link>
+          </div>
+          {notesData.recent.length === 0 ? (
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No notes saved yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {notesData.recent.map((n, idx) => (
+                <div key={n.id || idx} style={{ fontSize: '0.8rem', padding: '0.35rem 0.6rem', borderRadius: '6px', background: 'var(--surface-secondary)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.title}</div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{n.subject || n.category || 'General'}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Pending Assignments Card */}
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <FolderKanban size={16} color="var(--warning)" /> Assignments ({assignmentsData.pending})
+            </span>
+            <Link to="/college/assignments" style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View All →</Link>
+          </div>
+          {assignmentsData.list.length === 0 ? (
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No assignments yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {assignmentsData.list.map((a, idx) => (
+                <div key={a.id || idx} style={{ fontSize: '0.8rem', padding: '0.35rem 0.6rem', borderRadius: '6px', background: 'var(--surface-secondary)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.title}</div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Due: {a.dueDate || a.due_date || 'Soon'}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Reminders Card */}
+        <div className="card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Bell size={16} color="var(--accent)" /> Reminders ({remindersData.total})
+            </span>
+            <Link to="/college/reminders" style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>View All →</Link>
+          </div>
+          {remindersData.list.length === 0 ? (
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>No reminders yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {remindersData.list.map((r, idx) => (
+                <div key={r.id || idx} style={{ fontSize: '0.8rem', padding: '0.35rem 0.6rem', borderRadius: '6px', background: 'var(--surface-secondary)', border: '1px solid var(--border)' }}>
+                  <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title || r.subject}</div>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{r.time || r.reminderTime || 'Scheduled'}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -267,10 +382,10 @@ export default function CollegeDashboard() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {summary.taskSummary.upcomingDeadlines.length === 0 ? (
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>No pending task deadlines.</p>
+            {tasksData.upcomingDeadlines.length === 0 ? (
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>No tasks yet.</p>
             ) : (
-              summary.taskSummary.upcomingDeadlines.map(task => (
+              tasksData.upcomingDeadlines.map(task => (
                 <div key={task.id} style={{
                   padding: '0.75rem 0.9rem',
                   borderRadius: '8px',
@@ -298,10 +413,10 @@ export default function CollegeDashboard() {
         <div className="card">
           <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem' }}>Earned Badges & Academic Milestones</h3>
           <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-            {summary.studySummary.badges.length === 0 ? (
+            {studyData.badges.length === 0 ? (
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Complete study sessions or tasks to unlock milestone badges!</p>
             ) : (
-              summary.studySummary.badges.map((b, idx) => (
+              studyData.badges.map((b, idx) => (
                 <div key={idx} style={{
                   padding: '0.6rem 0.85rem',
                   borderRadius: '8px',
@@ -324,4 +439,3 @@ export default function CollegeDashboard() {
     </div>
   );
 }
-
