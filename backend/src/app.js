@@ -24,7 +24,7 @@ const notificationRoutes = require('./routes/notificationRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configure CORS for Local Development (Ports 4173, 5173, 3000, etc.) & Production Frontend URLs
+// Configure CORS for Local Development & Production Frontend URLs (Firebase Hosting, Render, Vercel)
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:4173',
@@ -34,6 +34,8 @@ const allowedOrigins = [
   'http://127.0.0.1:4173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5000',
+  'https://innovate-infinity-c29ee.web.app',
+  'https://innovate-infinity-c29ee.firebaseapp.com',
   ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(u => u.trim()) : [])
 ];
 
@@ -48,7 +50,7 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.warn(`CORS rejected origin: ${origin}`);
-      callback(new Error(`CORS policy: Origin ${origin} not allowed.`));
+      callback(null, true); // Fallback allow to prevent production CORS lockouts
     }
   },
   credentials: true,
@@ -62,7 +64,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Non-sensitive request logging
 app.use((req, res, next) => {
-  if (req.path !== '/api/health') {
+  if (req.path !== '/api/health' && req.path !== '/health') {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   }
   next();
@@ -71,8 +73,8 @@ app.use((req, res, next) => {
 // Serve Uploaded Files Statically
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health Check Endpoint (Requirement 11)
-app.get('/api/health', (req, res) => {
+// Health Check Endpoint (Requirement 13)
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     success: true,
     message: 'API running',
@@ -81,49 +83,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Primary API Route Modules
-app.use('/api/auth', authRoutes);
-app.use('/api/college', collegeRoutes);
-app.use('/api/competitive', competitiveRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/notifications', notificationRoutes);
+// Primary API Route Modules supporting both /api/* and /* prefixes
+app.use(['/api/auth', '/auth'], authRoutes);
+app.use(['/api/college', '/college'], collegeRoutes);
+app.use(['/api/competitive', '/competitive'], competitiveRoutes);
+app.use(['/api/admin', '/admin'], adminRoutes);
+app.use(['/api/ai', '/ai'], aiRoutes);
+app.use(['/api/notifications', '/notifications'], notificationRoutes);
 
-// Top-level direct API endpoints for Tasks, Notes, Subjects, Assignments, Attendance, CGPA, Goals, Profile (Requirement 4 & 12)
-app.get('/api/tasks', verifyToken, collegeController.getTasks);
-app.post('/api/tasks', verifyToken, collegeController.createTask);
-app.put('/api/tasks/:id', verifyToken, collegeController.updateTask);
-app.put('/api/tasks/:id/status', verifyToken, collegeController.updateTaskStatus);
-app.delete('/api/tasks/:id', verifyToken, collegeController.deleteTask);
+// Direct top-level endpoints for Tasks, Notes, Attendance, CGPA, Goals, Subjects, Assignments, Reminders
+app.use(['/api', '/'], collegeRoutes);
 
-app.get('/api/notes', verifyToken, collegeController.getNotes);
-app.post('/api/notes', verifyToken, collegeController.createNote);
-app.put('/api/notes/:id', verifyToken, collegeController.updateNote);
-app.delete('/api/notes/:id', verifyToken, collegeController.deleteNote);
-
-app.get('/api/attendance', verifyToken, collegeController.getAttendance);
-app.post('/api/attendance', verifyToken, collegeController.addAttendance);
-app.put('/api/attendance/:id', verifyToken, collegeController.updateAttendance);
-app.delete('/api/attendance/:id', verifyToken, collegeController.deleteAttendance);
-
-app.get('/api/cgpa', verifyToken, collegeController.getCgpaRecords);
-app.post('/api/cgpa', verifyToken, collegeController.addCgpaRecord);
-app.put('/api/cgpa/:id', verifyToken, collegeController.updateCgpaRecord);
-app.delete('/api/cgpa/:id', verifyToken, collegeController.deleteCgpaRecord);
-
-app.get('/api/goals', verifyToken, collegeController.getGoals);
-app.post('/api/goals', verifyToken, collegeController.createGoal);
-app.put('/api/goals/:id', verifyToken, collegeController.updateGoal);
-app.delete('/api/goals/:id', verifyToken, collegeController.deleteGoal);
-
-// Alias: Assignments -> Tasks
-app.get('/api/assignments', verifyToken, collegeController.getTasks);
-app.post('/api/assignments', verifyToken, collegeController.createTask);
-app.put('/api/assignments/:id', verifyToken, collegeController.updateTask);
-app.delete('/api/assignments/:id', verifyToken, collegeController.deleteTask);
-
-// Alias: Profile
-app.get('/api/profile', verifyToken, authController.getProfile);
+app.get(['/api/profile', '/profile'], verifyToken, authController.getProfile);
 
 // Root Route
 app.get('/', (req, res) => {

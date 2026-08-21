@@ -2588,11 +2588,50 @@ class FirestoreService {
     return docData;
   }
 
-  async deleteQuestion(questionId) {
+  async getExamRoadmap(examId, userId) {
     const db = this.firestore;
-    if (!db) return;
+    if (!db) {
+      return { subjects: [], totalTopics: 0, completedTopics: 0, overallPercentage: 0 };
+    }
 
-    await db.collection('questions').doc(String(questionId)).delete();
+    const subjectsSnap = await db.collection('exams').doc(String(examId || 1)).collection('subjects').get().catch(() => ({ docs: [] }));
+    const subjects = this.querySnap(subjectsSnap);
+
+    const userProgress = userId ? await this.getUserTopicProgress(userId).catch(() => []) : [];
+    const progressMap = {};
+    (userProgress || []).forEach(p => {
+      if (p.topicId) progressMap[p.topicId] = p.status;
+    });
+
+    let totalTopics = 0;
+    let completedTopics = 0;
+
+    const subjectsWithTopics = await Promise.all(subjects.map(async (subj) => {
+      const topicsSnap = await db.collection('exams').doc(String(examId || 1)).collection('subjects').doc(String(subj.id)).collection('topics').get().catch(() => ({ docs: [] }));
+      const topics = this.querySnap(topicsSnap);
+      totalTopics += topics.length;
+
+      const topicsWithStatus = topics.map(t => {
+        const status = progressMap[t.id] || 'not_started';
+        if (status === 'completed') completedTopics++;
+        return { ...t, status };
+      });
+
+      return {
+        ...subj,
+        topics: topicsWithStatus
+      };
+    }));
+
+    const overallPercentage = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
+
+    return {
+      examId: String(examId || 1),
+      subjects: subjectsWithTopics,
+      totalTopics,
+      completedTopics,
+      overallPercentage
+    };
   }
 
   async getAdminStats() {

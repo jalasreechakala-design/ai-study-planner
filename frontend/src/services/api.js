@@ -1,16 +1,20 @@
 import axios from 'axios';
 import { auth } from '../firebase';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let rawBaseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let cleanBaseURL = rawBaseURL.replace(/\/+$/, '');
+if (!cleanBaseURL.endsWith('/api')) {
+  cleanBaseURL += '/api';
+}
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: cleanBaseURL,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Centralized Request Interceptor: Attach Firebase ID Token
+// Centralized Request Interceptor: Attach Firebase ID Token automatically
 api.interceptors.request.use(
   async (config) => {
     if (auth) {
