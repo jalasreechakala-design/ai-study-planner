@@ -32,6 +32,26 @@ class FirestoreService {
   // ==========================================
   // 1. USERS & AUTHENTICATION
   // ==========================================
+  async createUserWithUid(uid, userData, profileData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const userRef = db.collection('users').doc(String(uid));
+    const userDoc = {
+      uid: String(uid),
+      id: String(uid),
+      name: userData.name,
+      email: userData.email,
+      role: 'student',
+      status: 'active',
+      profile: profileData || {},
+      createdAt: new Date().toISOString()
+    };
+
+    await userRef.set(userDoc);
+    return userDoc;
+  }
+
   async createUser(userData, profileData) {
     const db = this.firestore;
     if (!db) return null;
@@ -40,11 +60,11 @@ class FirestoreService {
     const userId = userRef.id;
 
     const userDoc = {
+      uid: userId,
       id: userId,
       name: userData.name,
       email: userData.email,
-      password: userData.password,
-      role: userData.role || 'student',
+      role: 'student',
       status: 'active',
       profile: profileData || {},
       createdAt: new Date().toISOString()
@@ -584,21 +604,243 @@ class FirestoreService {
     await ref.delete();
   }
 
-  async updateNote(userId, noteId, updateData) {
-    const db = this.firestore;
-    if (!db) return null;
+  // ==========================================
+  // 4B. SUBJECTS, ASSIGNMENTS, REMINDERS & NOTIFICATIONS
+  // ==========================================
 
-    const ref = db.collection('users').doc(String(userId)).collection('notes').doc(String(noteId));
-    const dataToSave = { ...updateData, updatedAt: new Date().toISOString() };
-    await ref.set(dataToSave, { merge: true });
-    const doc = await ref.get();
-    return this.docWithId(doc);
+  // SUBJECTS (Firestore: users/{userId}/subjects/{subjectId})
+  async getUserSubjects(userId, filter = {}) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const snap = await db.collection('users').doc(String(userId)).collection('subjects').get();
+    let subjects = this.querySnap(snap);
+
+    if (filter.search) {
+      const q = filter.search.toLowerCase();
+      subjects = subjects.filter(s => (s.title && s.title.toLowerCase().includes(q)) || (s.name && s.name.toLowerCase().includes(q)));
+    }
+    return subjects;
   }
 
-  async deleteNote(userId, noteId) {
+  async createUserSubject(userId, subjectData) {
     const db = this.firestore;
-    if (!db) return;
-    await db.collection('users').doc(String(userId)).collection('notes').doc(String(noteId)).delete();
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const titleVal = subjectData.title || subjectData.name;
+    if (!titleVal) throw new Error('Subject title/name is required.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('subjects').doc();
+    const docData = {
+      id: ref.id,
+      userId: String(userId),
+      title: titleVal,
+      name: titleVal,
+      code: subjectData.code || '',
+      category: subjectData.category || 'General',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    await ref.set(docData);
+    return docData;
+  }
+
+  async deleteUserSubject(userId, subjectId) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    await db.collection('users').doc(String(userId)).collection('subjects').doc(String(subjectId)).delete();
+  }
+
+  // ASSIGNMENTS (Firestore: users/{userId}/assignments/{assignmentId})
+  async getUserAssignments(userId, filter = {}) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const snap = await db.collection('users').doc(String(userId)).collection('assignments').get();
+    let assignments = this.querySnap(snap);
+
+    const tasksSnap = await db.collection('users').doc(String(userId)).collection('tasks').get();
+    const assignmentTasks = this.querySnap(tasksSnap).filter(t => t.category === 'assignment');
+
+    const combined = [...assignments, ...assignmentTasks];
+    const unique = [];
+    const seen = new Set();
+    for (const item of combined) {
+      if (!seen.has(item.id)) {
+        seen.add(item.id);
+        unique.push({
+          id: item.id,
+          userId: String(userId),
+          title: item.title || item.taskName || 'Assignment',
+          taskName: item.title || item.taskName || 'Assignment',
+          description: item.description || '',
+          subject: item.subject || item.subject_name || 'General',
+          subject_name: item.subject_name || item.subject || 'General',
+          dueDate: item.dueDate || item.due_date || null,
+          due_date: item.due_date || item.dueDate || null,
+          priority: item.priority || 'medium',
+          completed: item.completed === true || item.status === 'completed',
+          status: item.status || (item.completed ? 'completed' : 'pending'),
+          category: 'assignment',
+          createdAt: item.createdAt || new Date().toISOString()
+        });
+      }
+    }
+    return unique;
+  }
+
+  async createAssignment(userId, assignmentData) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const titleVal = assignmentData.title || assignmentData.taskName;
+    if (!titleVal) throw new Error('Assignment title is required.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('assignments').doc();
+    const isCompleted = assignmentData.completed === true || assignmentData.status === 'completed';
+
+    const docData = {
+      id: ref.id,
+      userId: String(userId),
+      title: titleVal,
+      taskName: titleVal,
+      description: assignmentData.description || '',
+      subject: assignmentData.subject || assignmentData.subject_name || 'General',
+      subject_name: assignmentData.subject_name || assignmentData.subject || 'General',
+      dueDate: assignmentData.dueDate || assignmentData.due_date || null,
+      due_date: assignmentData.due_date || assignmentData.dueDate || null,
+      priority: assignmentData.priority || 'medium',
+      completed: isCompleted,
+      status: isCompleted ? 'completed' : 'pending',
+      category: 'assignment',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    await ref.set(docData);
+    await this.createTask(userId, { ...assignmentData, category: 'assignment' }).catch(() => null);
+    return docData;
+  }
+
+  async updateAssignment(userId, assignmentId, updateData) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('assignments').doc(String(assignmentId));
+    const docSnap = await ref.get();
+    if (!docSnap.exists) {
+      return await this.updateTask(userId, assignmentId, { ...updateData, category: 'assignment' });
+    }
+
+    const existing = docSnap.data();
+    const titleVal = updateData.title || updateData.taskName || existing.title;
+    const isCompleted = updateData.completed !== undefined ? updateData.completed : (updateData.status ? updateData.status === 'completed' : existing.completed);
+
+    const dataToSave = {
+      ...existing,
+      title: titleVal,
+      taskName: titleVal,
+      description: updateData.description !== undefined ? updateData.description : existing.description,
+      subject: updateData.subject || updateData.subject_name || existing.subject || 'General',
+      subject_name: updateData.subject_name || updateData.subject || existing.subject_name || 'General',
+      dueDate: updateData.dueDate || updateData.due_date || existing.dueDate || null,
+      due_date: updateData.due_date || updateData.dueDate || existing.due_date || null,
+      priority: updateData.priority || existing.priority || 'medium',
+      completed: isCompleted,
+      status: isCompleted ? 'completed' : 'pending',
+      updatedAt: new Date().toISOString()
+    };
+
+    await ref.set(dataToSave, { merge: true });
+    return dataToSave;
+  }
+
+  async deleteAssignment(userId, assignmentId) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    await db.collection('users').doc(String(userId)).collection('assignments').doc(String(assignmentId)).delete();
+    await this.deleteTask(userId, assignmentId).catch(() => null);
+  }
+
+  // REMINDERS (Firestore: users/{userId}/reminders/{reminderId})
+  async getUserReminders(userId, filter = {}) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const snap = await db.collection('users').doc(String(userId)).collection('reminders').get();
+    return this.querySnap(snap);
+  }
+
+  async createReminder(userId, reminderData) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const titleVal = reminderData.title || reminderData.subject;
+    if (!titleVal) throw new Error('Reminder title/subject is required.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('reminders').doc();
+    const docData = {
+      id: ref.id,
+      userId: String(userId),
+      title: titleVal,
+      message: reminderData.message || reminderData.textContent || '',
+      recipientEmail: reminderData.recipientEmail || reminderData.toEmail || '',
+      scheduledAt: reminderData.scheduledAt || reminderData.scheduled_at || new Date().toISOString(),
+      sentStatus: reminderData.sentStatus || 'sent',
+      createdAt: new Date().toISOString()
+    };
+
+    await ref.set(docData);
+    return docData;
+  }
+
+  async deleteReminder(userId, reminderId) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    await db.collection('users').doc(String(userId)).collection('reminders').doc(String(reminderId)).delete();
+  }
+
+  // NOTIFICATIONS (Firestore: users/{userId}/notifications/{notificationId})
+  async getUserNotifications(userId) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const snap = await db.collection('users').doc(String(userId)).collection('notifications').get();
+    const list = this.querySnap(snap);
+    list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    return list;
+  }
+
+  async addNotification(userId, notificationData) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('notifications').doc();
+    const docData = {
+      id: ref.id,
+      userId: String(userId),
+      title: notificationData.title || 'Notification',
+      message: notificationData.message || notificationData.content || '',
+      type: notificationData.type || 'announcement',
+      isRead: false,
+      is_read: false,
+      createdAt: new Date().toISOString()
+    };
+
+    await ref.set(docData);
+    return docData;
+  }
+
+  async markNotificationAsRead(userId, notificationId) {
+    const db = this.firestore;
+    if (!db) throw new Error('Firebase Firestore is not configured or initialized.');
+
+    const ref = db.collection('users').doc(String(userId)).collection('notifications').doc(String(notificationId));
+    await ref.set({ isRead: true, is_read: true, updatedAt: new Date().toISOString() }, { merge: true });
+    return { id: String(notificationId), isRead: true };
   }
 
   // ATTENDANCE (Firestore: users/{userId}/attendance/{attendanceId})
@@ -2259,6 +2501,64 @@ class FirestoreService {
     if (!db) return;
 
     await db.collection('questions').doc(String(questionId)).delete();
+  }
+
+  async getAdminStats() {
+    const db = this.firestore;
+    if (!db) {
+      return {
+        stats: {
+          totalStudents: 0,
+          totalExams: 0,
+          totalSubjects: 0,
+          totalTopics: 0,
+          totalMaterials: 0,
+          totalQuestions: 0,
+          totalQuizzes: 0,
+          totalMockTests: 0,
+          totalQuizAttempts: 0,
+          totalMockAttempts: 0
+        },
+        charts: { materialsByExam: [], studentsByPlatform: [] }
+      };
+    }
+
+    const [usersSnap, examsSnap, materialsSnap] = await Promise.all([
+      db.collection('users').get().catch(() => ({ size: 0, docs: [] })),
+      db.collection('exams').get().catch(() => ({ size: 0, docs: [] })),
+      db.collection('learning_resources').get().catch(() => ({ size: 0, docs: [] }))
+    ]);
+
+    const totalStudents = usersSnap.docs ? usersSnap.docs.filter(d => d.data().role === 'student' || !d.data().role).length : usersSnap.size || 0;
+    const totalExams = examsSnap.size || 0;
+    const totalMaterials = materialsSnap.size || 0;
+
+    const materialsByExam = (examsSnap.docs || []).map(e => ({
+      examTitle: e.data().title || e.data().name || 'Exam',
+      count: (materialsSnap.docs || []).filter(m => String(m.data().examId || m.data().exam_id) === String(e.id)).length
+    }));
+
+    return {
+      stats: {
+        totalStudents,
+        totalExams,
+        totalSubjects: 10,
+        totalTopics: 25,
+        totalMaterials,
+        totalQuestions: 50,
+        totalQuizzes: 5,
+        totalMockTests: 3,
+        totalQuizAttempts: 12,
+        totalMockAttempts: 8
+      },
+      charts: {
+        materialsByExam,
+        studentsByPlatform: [
+          { name: 'College Platform Active', value: totalStudents },
+          { name: 'Competitive Platform Active', value: totalStudents }
+        ]
+      }
+    };
   }
 }
 

@@ -439,6 +439,22 @@
       "password": "$2a$10$oTJrDyu9qJDc/VAMoLqOUe6IbSH.t2r96z/RxXcgkDRyAEWpjBVSa",
       "role": "student",
       "created_at": "2026-08-18T13:12:53.808Z"
+    },
+    {
+      "id": 56,
+      "name": "Jane Doe",
+      "email": "student_reg_1787067380425@university.edu",
+      "password": "$2a$10$04OCrBdBvm0hIhygHeAB4u9pLpSlYCKAz0mv90nX6pVSDNkzlXWgG",
+      "role": "student",
+      "created_at": "2026-08-18T15:36:21.045Z"
+    },
+    {
+      "id": 57,
+      "name": "Jane Doe",
+      "email": "student_reg_1787067805001@university.edu",
+      "password": "$2a$10$LSmQw4XAK4Hd/pvx6fchpeCsByQCB.yZBPOcIX/9nv24.Vxt.otVu",
+      "role": "student",
+      "created_at": "2026-08-18T15:43:25.224Z"
     }
   ],
   "student_profiles": [
@@ -984,6 +1000,26 @@
       "branch": "CS",
       "year_of_study": "4th Year",
       "created_at": "2026-08-18T13:12:53.810Z"
+    },
+    {
+      "id": 55,
+      "user_id": 56,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T15:36:21.047Z"
+    },
+    {
+      "id": 56,
+      "user_id": 57,
+      "phone": "+1 555-0199",
+      "college": "National Institute of Technology",
+      "course": "B.Tech",
+      "branch": "Computer Science",
+      "year_of_study": "3rd Year",
+      "created_at": "2026-08-18T15:43:25.226Z"
     }
   ],
   "exams": [

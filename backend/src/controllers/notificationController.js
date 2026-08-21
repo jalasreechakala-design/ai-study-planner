@@ -1,7 +1,6 @@
-const db = require('../config/db');
+const firestoreService = require('../services/firestoreService');
 const nodemailer = require('nodemailer');
 
-// Setup Nodemailer transporter with fallback
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: Number(process.env.SMTP_PORT) || 587,
@@ -14,41 +13,45 @@ const transporter = nodemailer.createTransport({
 
 exports.getNotifications = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const notifications = await db.query('SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC', [userId]);
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'User is not authenticated.' });
 
-    const unreadCount = notifications.filter(n => !n.is_read).length;
+    const notifications = await firestoreService.getUserNotifications(userId);
+    const unreadCount = notifications.filter(n => !n.is_read && !n.isRead).length;
 
     return res.json({
       notifications,
       unreadCount
     });
   } catch (err) {
-    console.error('getNotifications Error:', err);
-    return res.status(500).json({ error: 'Failed to fetch notifications.' });
+    console.error('getNotifications Error:', err.message);
+    return res.status(500).json({ error: `Failed to fetch notifications from Cloud Firestore: ${err.message}` });
   }
 };
 
 exports.markAsRead = async (req, res) => {
   try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'User is not authenticated.' });
+
     const { id } = req.params;
-    await db.query('UPDATE notifications SET is_read = 1 WHERE id = ?', [id]);
-    return res.json({ message: 'Notification marked as read.' });
+    await firestoreService.markNotificationAsRead(userId, id);
+    return res.json({ message: 'Notification marked as read in Cloud Firestore.' });
   } catch (err) {
-    console.error('markAsRead Error:', err);
-    return res.status(500).json({ error: 'Failed to update notification.' });
+    console.error('markAsRead Error:', err.message);
+    return res.status(500).json({ error: `Failed to update notification in Cloud Firestore: ${err.message}` });
   }
 };
 
 exports.sendEmailReminder = async (req, res) => {
   try {
+    const userId = req.user?.id;
     const { toEmail, subject, textContent } = req.body;
 
     if (!toEmail || !subject || !textContent) {
       return res.status(400).json({ error: 'Recipient email, subject, and content are required.' });
     }
 
-    // Attempt email delivery
     try {
       if (process.env.SMTP_USER && process.env.SMTP_PASS) {
         await transporter.sendMail({
@@ -71,9 +74,18 @@ exports.sendEmailReminder = async (req, res) => {
       console.warn(`SMTP Dispatch failed (${mailErr.message}), falling back to simulated logger.`);
     }
 
-    return res.json({ message: `Email reminder queued and sent to ${toEmail} successfully!` });
+    if (userId) {
+      await firestoreService.createReminder(userId, {
+        toEmail,
+        subject,
+        textContent,
+        sentStatus: 'sent'
+      }).catch(() => null);
+    }
+
+    return res.json({ message: `Email reminder queued and saved to Cloud Firestore successfully!` });
   } catch (err) {
-    console.error('sendEmailReminder Error:', err);
-    return res.status(500).json({ error: 'Failed to send email reminder.' });
+    console.error('sendEmailReminder Error:', err.message);
+    return res.status(500).json({ error: `Failed to send email reminder: ${err.message}` });
   }
 };

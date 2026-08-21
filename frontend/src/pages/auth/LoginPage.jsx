@@ -26,7 +26,29 @@ export default function LoginPage() {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid email or password. Please try again.');
+      console.error('Student Login Firebase Error:', {
+        code: err.code,
+        message: err.message,
+        error: err
+      });
+
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        setError('Invalid email or password. Please try again.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('The email address is not valid.');
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError('Email/password authentication is not enabled in Firebase Console.');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network connection failed. Please check your internet connection and try again.');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Access to this account has been temporarily disabled due to many failed login attempts.');
+      } else if (err.code === 'permission-denied') {
+        setError('Firestore permission denied. Access restriction in place.');
+      } else if (err.code === 'auth/configuration-not-initialized' || err.code === 'auth/account-disabled') {
+        setError(err.message);
+      } else {
+        setError(err.response?.data?.error || err.message || 'Invalid email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

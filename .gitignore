@@ -1,11 +1,12 @@
-# Dependency directories
+# Dependencies
 node_modules/
 
-# Environment files and secrets
+# Environment files
 .env
 .env.*
 .env.local
-.env.production
+
+# Secrets and Firebase Service Account Keys
 *.pem
 *.key
 service-account*.json
@@ -18,7 +19,3 @@ secrets/*.json
 # Logs
 logs/
 *.log
-
-# Uploaded media files
-uploads/*
-!uploads/.gitkeep

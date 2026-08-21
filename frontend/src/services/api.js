@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { auth } from '../firebase';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -9,16 +10,49 @@ const api = axios.create({
   }
 });
 
+// Centralized Request Interceptor: Attach Firebase ID Token
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    if (auth) {
+      if (typeof auth.authStateReady === 'function') {
+        try {
+          await auth.authStateReady();
+        } catch (readyErr) {
+          // Ignore auth state ready failure
+        }
+      }
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        try {
+          const token = await currentUser.getIdToken();
+          config.headers.Authorization = `Bearer ${token}`;
+        } catch (error) {
+          console.error('Failed to obtain Firebase ID token:', error.message);
+        }
+      } else {
+        delete config.headers.Authorization;
+      }
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+// Centralized Response Interceptor: Informative Error Debugging
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response ? error.response.status : 'NETWORK_ERROR';
+    const message = error.response?.data?.error || error.response?.data?.message || error.message;
+    const url = error.config ? error.config.url : 'UNKNOWN_ENDPOINT';
+    console.error(`❌ API Error [${status}] on ${url}:`, message);
+    return Promise.reject(error);
+  }
+);
+
+export const healthAPI = {
+  checkHealth: () => api.get('/health')
+};
 
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
@@ -56,7 +90,20 @@ export const collegeAPI = {
 
   logSession: (sessionData) => api.post('/college/study-session', sessionData),
   getStreaksBadges: () => api.get('/college/streaks-badges'),
-  getAnalytics: () => api.get('/college/analytics')
+  getAnalytics: () => api.get('/college/analytics'),
+
+  getSubjects: () => api.get('/college/subjects'),
+  createSubject: (data) => api.post('/college/subjects', data),
+  deleteSubject: (id) => api.delete(`/college/subjects/${id}`),
+
+  getAssignments: () => api.get('/college/assignments'),
+  createAssignment: (data) => api.post('/college/assignments', data),
+  updateAssignment: (id, data) => api.put(`/college/assignments/${id}`, data),
+  deleteAssignment: (id) => api.delete(`/college/assignments/${id}`),
+
+  getReminders: () => api.get('/college/reminders'),
+  createReminder: (data) => api.post('/college/reminders', data),
+  deleteReminder: (id) => api.delete(`/college/reminders/${id}`)
 };
 
 export const competitiveAPI = {

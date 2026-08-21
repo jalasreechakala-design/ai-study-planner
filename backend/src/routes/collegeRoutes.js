@@ -44,4 +44,20 @@ router.post('/study-session', collegeController.logStudySession);
 router.get('/streaks-badges', collegeController.getStreaksAndBadges);
 router.get('/analytics', collegeController.getStudyAnalytics);
 
+// Subjects
+router.get('/subjects', collegeController.getSubjects);
+router.post('/subjects', collegeController.createSubject);
+router.delete('/subjects/:id', collegeController.deleteSubject);
+
+// Assignments
+router.get('/assignments', collegeController.getAssignments);
+router.post('/assignments', collegeController.createAssignment);
+router.put('/assignments/:id', collegeController.updateAssignment);
+router.delete('/assignments/:id', collegeController.deleteAssignment);
+
+// Reminders
+router.get('/reminders', collegeController.getReminders);
+router.post('/reminders', collegeController.createReminder);
+router.delete('/reminders/:id', collegeController.deleteReminder);
+
 module.exports = router;

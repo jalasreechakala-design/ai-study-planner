@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const db = require('../config/db');
+const { getAuth, getDb } = require('../config/firebase');
+const firestoreService = require('../services/firestoreService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_study_planner_2026_x987';
 
@@ -22,66 +23,111 @@ exports.registerStudent = async (req, res) => {
     }
 
     if (!isValidEmail(email)) {
-      return res.status(400).json({ error: 'Please enter a valid email address format.' });
+      return res.status(400).json({ error: 'Invalid email. Please enter a valid email address.' });
     }
 
     if (!isValidPassword(password)) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long and contain both letters and numbers.' });
+      return res.status(400).json({ error: 'Weak password. Password must be at least 6 characters long and contain both letters and numbers.' });
     }
 
     if (confirmPassword && password !== confirmPassword) {
       return res.status(400).json({ error: 'Passwords do not match.' });
     }
 
-    const existingUsers = await db.query('SELECT id FROM users WHERE email = ?', [email]);
-    if (existingUsers && existingUsers.length > 0) {
-      return res.status(400).json({ error: 'An account with this email address already exists.' });
+    const auth = getAuth();
+
+    // 1. Check if email is already registered in Firestore
+    const existingFsUser = await firestoreService.getUserByEmail(email).catch(() => null);
+    if (existingFsUser) {
+      return res.status(400).json({ error: 'Email already registered.' });
     }
 
+    // 2. Check if email is already registered in Firebase Auth
+    if (auth) {
+      try {
+        const existingAuthUser = await auth.getUserByEmail(email);
+        if (existingAuthUser) {
+          return res.status(400).json({ error: 'Email already registered.' });
+        }
+      } catch (authErr) {
+        if (authErr.code !== 'auth/user-not-found') {
+          console.error('Firebase Auth Check Error:', authErr);
+        }
+      }
+    }
+
+    let uid;
+    let createdAuthUser = false;
+    const profileData = { phone: phone || '', college, course, branch, year_of_study };
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const result = await db.query(
-      'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name, email, passwordHash, 'student']
-    );
+    if (auth) {
+      try {
+        const userRecord = await auth.createUser({
+          email,
+          password,
+          displayName: name
+        });
+        uid = userRecord.uid;
+        createdAuthUser = true;
 
-    let userId = result.insertId;
-    if (!userId) {
-      const fetched = await db.query('SELECT id FROM users WHERE email = ?', [email]);
-      userId = fetched[0]?.id;
+        await auth.setCustomUserClaims(uid, { role: 'student' });
+      } catch (fbAuthErr) {
+        console.error('Firebase Auth Create User Error:', fbAuthErr);
+        if (fbAuthErr.code === 'auth/email-already-exists') {
+          return res.status(400).json({ error: 'Email already registered.' });
+        }
+        if (fbAuthErr.code === 'auth/invalid-email') {
+          return res.status(400).json({ error: 'Invalid email.' });
+        }
+        if (fbAuthErr.code === 'auth/weak-password') {
+          return res.status(400).json({ error: 'Weak password. Password must be at least 6 characters long and contain both letters and numbers.' });
+        }
+        return res.status(500).json({ error: `Firebase configuration error: ${fbAuthErr.message}` });
+      }
     }
 
-    await db.query(
-      'INSERT INTO student_profiles (user_id, phone, college, course, branch, year_of_study) VALUES (?, ?, ?, ?, ?, ?)',
-      [userId, phone || '', college, course, branch, year_of_study]
-    );
+    try {
+      if (uid) {
+        await firestoreService.createUserWithUid(uid, { name, email, role: 'student', password: passwordHash }, profileData);
+      } else {
+        const createdUser = await firestoreService.createUser({ name, email, role: 'student', password: passwordHash }, profileData);
+        uid = createdUser.id || createdUser.uid;
+      }
+    } catch (fsErr) {
+      console.error('Firestore User Profile Creation Error:', fsErr);
+      if (createdAuthUser && uid && auth) {
+        try {
+          await auth.deleteUser(uid);
+        } catch (delErr) {
+          console.error(`Failed to clean up Firebase Auth user ${uid}:`, delErr);
+        }
+      }
+      return res.status(500).json({ error: `Firestore creation error: ${fsErr.message}` });
+    }
 
     const token = jwt.sign(
-      { id: userId, email, role: 'student', name },
+      { id: uid, uid, email, role: 'student', name },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
 
     return res.status(201).json({
-      message: 'Student registered successfully!',
+      message: 'Student registered successfully in Cloud Firestore!',
       token,
       user: {
-        id: userId,
+        id: uid,
+        uid,
         name,
         email,
         role: 'student',
-        profile: {
-          phone: phone || '',
-          college,
-          course,
-          branch,
-          year_of_study
-        }
+        status: 'active',
+        profile: profileData
       }
     });
   } catch (err) {
     console.error('Registration Error:', err);
-    return res.status(500).json({ error: 'Failed to register student due to a server error.' });
+    return res.status(500).json({ error: err.message || 'Failed to register student due to a server error.' });
   }
 };
 
@@ -93,29 +139,24 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const users = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (!users || users.length === 0) {
+    const user = await firestoreService.getUserByEmail(email);
+
+    if (!user) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
-    const user = users[0];
-    const targetPasswordHash = user.password || user.password_hash;
-
-    if (!targetPasswordHash) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
+    if (user.password || user.password_hash) {
+      const targetPasswordHash = user.password || user.password_hash;
+      const match = await bcrypt.compare(password, targetPasswordHash);
+      if (!match) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
     }
 
-    const match = await bcrypt.compare(password, targetPasswordHash);
-
-    if (!match) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
-    }
-
-    const profileRows = await db.query('SELECT * FROM student_profiles WHERE user_id = ?', [user.id]);
-    const profile = profileRows && profileRows.length > 0 ? profileRows[0] : null;
+    const userId = user.id || user.uid;
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role, name: user.name },
+      { id: userId, uid: userId, email: user.email, role: user.role || 'student', name: user.name },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -124,11 +165,12 @@ exports.login = async (req, res) => {
       message: 'Login successful!',
       token,
       user: {
-        id: user.id,
+        id: userId,
+        uid: userId,
         name: user.name,
         email: user.email,
-        role: user.role,
-        profile
+        role: user.role || 'student',
+        profile: user.profile || null
       }
     });
   } catch (err) {
@@ -140,24 +182,17 @@ exports.login = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const users = await db.query('SELECT id, name, email, role, created_at FROM users WHERE id = ?', [userId]);
+    const user = await firestoreService.getUserById(userId);
 
-    if (!users || users.length === 0) {
-      return res.status(404).json({ error: 'User not found.' });
+    if (!user) {
+      return res.status(404).json({ error: 'User profile not found in Cloud Firestore.' });
     }
 
-    const user = users[0];
-    const profileRows = await db.query('SELECT * FROM student_profiles WHERE user_id = ?', [userId]);
-    const profile = profileRows && profileRows.length > 0 ? profileRows[0] : null;
-
     return res.json({
-      user: {
-        ...user,
-        profile
-      }
+      user
     });
   } catch (err) {
     console.error('Get Profile Error:', err);
-    return res.status(500).json({ error: 'Failed to fetch profile.' });
+    return res.status(500).json({ error: 'Failed to fetch profile from Cloud Firestore.' });
   }
 };

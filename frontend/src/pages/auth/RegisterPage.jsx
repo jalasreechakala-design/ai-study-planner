@@ -65,7 +65,29 @@ export default function RegisterPage() {
       await register(formData);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      console.error('Student Registration Firebase Error:', {
+        code: err.code,
+        message: err.message,
+        error: err
+      });
+
+      if (err.code === 'auth/email-already-in-use') {
+        setError('This email is already registered. Please use a different email or sign in.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('Password is too weak. Password must be at least 6 characters long and contain both letters and numbers.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('The email address is not valid.');
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError('Email/password authentication is not enabled in Firebase Console.');
+      } else if (err.code === 'auth/network-request-failed') {
+        setError('Network connection failed. Please check your internet connection.');
+      } else if (err.code === 'permission-denied') {
+        setError('Firestore permission denied. Unable to create profile document.');
+      } else if (err.code === 'auth/configuration-not-initialized') {
+        setError(err.message);
+      } else {
+        setError(err.response?.data?.error || err.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
