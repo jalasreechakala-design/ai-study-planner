@@ -484,6 +484,77 @@ exports.deleteMockTest = async (req, res) => {
   }
 };
 
+exports.updateSubject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await firestoreService.updateSubject(id, req.body);
+    return res.json({ message: 'Subject updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateSubject Error:', err.message);
+    return res.status(500).json({ error: `Failed to update subject in Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.updateTopic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const examId = req.body.examId || '1';
+    const subjectId = req.body.subjectId || '1';
+    await firestoreService.updateTopic(examId, subjectId, id, req.body);
+    return res.json({ message: 'Topic updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateTopic Error:', err.message);
+    return res.status(500).json({ error: `Failed to update topic in Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.updateSubtopic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const examId = req.body.examId || '1';
+    const subjectId = req.body.subjectId || '1';
+    const topicId = req.body.topicId || '1';
+    await firestoreService.updateSubtopic(examId, subjectId, topicId, id, req.body);
+    return res.json({ message: 'Subtopic updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateSubtopic Error:', err.message);
+    return res.status(500).json({ error: `Failed to update subtopic in Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.updateQuestion = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await firestoreService.updateQuestion(id, req.body);
+    return res.json({ message: 'Question updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateQuestion Error:', err.message);
+    return res.status(500).json({ error: `Failed to update question in Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.updateQuiz = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await firestoreService.updateQuiz(id, req.body);
+    return res.json({ message: 'Quiz updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateQuiz Error:', err.message);
+    return res.status(500).json({ error: `Failed to update quiz in Cloud Firestore: ${err.message}` });
+  }
+};
+
+exports.updateMockTest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await firestoreService.updateMockTest(id, req.body);
+    return res.json({ message: 'Mock test updated successfully in Cloud Firestore!' });
+  } catch (err) {
+    console.error('updateMockTest Error:', err.message);
+    return res.status(500).json({ error: `Failed to update mock test in Cloud Firestore: ${err.message}` });
+  }
+};
+
 // Function Aliases for adminRoutes
 exports.getSubjects = exports.getExamSubjects;
 exports.createSubject = exports.createExamSubject;
@@ -502,3 +573,4 @@ exports.updateMaterial = async (req, res) => {
   }
 };
 exports.deleteMaterial = exports.deleteStudyMaterial;
+

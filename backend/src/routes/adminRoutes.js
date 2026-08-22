@@ -64,11 +64,13 @@ router.delete('/exams/:id', adminController.deleteExam);
 // Subject Management CRUD
 router.get('/subjects', adminController.getSubjects);
 router.post('/subjects', adminController.createSubject);
+router.put('/subjects/:id', adminController.updateSubject);
 router.delete('/subjects/:id', adminController.deleteSubject);
 
 // Topic Management CRUD
 router.get('/topics', adminController.getTopics);
 router.post('/topics', adminController.createTopic);
+router.put('/topics/:id', adminController.updateTopic);
 router.delete('/topics/:id', adminController.deleteTopic);
 
 // Learning Resource Management CRUD
@@ -86,19 +88,23 @@ router.delete('/resources/:id', adminController.deleteMaterial);
 // Question Bank CRUD
 router.get('/questions', adminController.getQuestions);
 router.post('/questions', adminController.createQuestion);
+router.put('/questions/:id', adminController.updateQuestion);
 router.delete('/questions/:id', adminController.deleteQuestion);
 
 // Subtopic Management CRUD
 router.get('/subtopics', adminController.getSubtopics);
 router.post('/subtopics', adminController.createSubtopic);
+router.put('/subtopics/:id', adminController.updateSubtopic);
 router.delete('/subtopics/:id', adminController.deleteSubtopic);
 
 // Quiz & Mock Test Management
 router.post('/quizzes', adminController.createQuiz);
+router.put('/quizzes/:id', adminController.updateQuiz);
 router.delete('/quizzes/:id', adminController.deleteQuiz);
 
 router.get('/mock-tests', adminController.getMockTests);
 router.post('/mock-tests', adminController.createMockTest);
+router.put('/mock-tests/:id', adminController.updateMockTest);
 router.delete('/mock-tests/:id', adminController.deleteMockTest);
 
 // User Management & Student Directory

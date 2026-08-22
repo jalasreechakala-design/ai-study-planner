@@ -144,14 +144,17 @@ export const adminAPI = {
 
   getSubjects: (params) => api.get('/admin/subjects', { params }),
   createSubject: (data) => api.post('/admin/subjects', data),
+  updateSubject: (id, data) => api.put(`/admin/subjects/${id}`, data),
   deleteSubject: (id) => api.delete(`/admin/subjects/${id}`),
 
   getTopics: (params) => api.get('/admin/topics', { params }),
   createTopic: (data) => api.post('/admin/topics', data),
+  updateTopic: (id, data) => api.put(`/admin/topics/${id}`, data),
   deleteTopic: (id) => api.delete(`/admin/topics/${id}`),
 
   getSubtopics: (params) => api.get('/admin/subtopics', { params }),
   createSubtopic: (data) => api.post('/admin/subtopics', data),
+  updateSubtopic: (id, data) => api.put(`/admin/subtopics/${id}`, data),
   deleteSubtopic: (id) => api.delete(`/admin/subtopics/${id}`),
 
   getMaterials: (params) => api.get('/admin/materials', { params }),
@@ -166,13 +169,16 @@ export const adminAPI = {
 
   getQuestions: (params) => api.get('/admin/questions', { params }),
   createQuestion: (data) => api.post('/admin/questions', data),
+  updateQuestion: (id, data) => api.put(`/admin/questions/${id}`, data),
   deleteQuestion: (id) => api.delete(`/admin/questions/${id}`),
 
   createQuiz: (data) => api.post('/admin/quizzes', data),
+  updateQuiz: (id, data) => api.put(`/admin/quizzes/${id}`, data),
   deleteQuiz: (id) => api.delete(`/admin/quizzes/${id}`),
 
   getMockTests: (params) => api.get('/admin/mock-tests', { params }),
   createMockTest: (data) => api.post('/admin/mock-tests', data),
+  updateMockTest: (id, data) => api.put(`/admin/mock-tests/${id}`, data),
   deleteMockTest: (id) => api.delete(`/admin/mock-tests/${id}`),
 
   getStudents: (params) => api.get('/admin/students', { params }),

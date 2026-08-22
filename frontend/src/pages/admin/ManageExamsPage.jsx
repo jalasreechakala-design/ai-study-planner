@@ -95,18 +95,28 @@ export default function ManageExamsPage() {
   const handleSaveSubject = async (e) => {
     e.preventDefault();
     try {
-      await adminAPI.createSubject({
-        exam_id: selectedExamId,
-        examId: selectedExamId,
-        title: subjectForm.title,
-        code: subjectForm.code,
-        weightage: subjectForm.weightage
-      });
+      if (subjectForm.id) {
+        await adminAPI.updateSubject(subjectForm.id, {
+          exam_id: selectedExamId,
+          examId: selectedExamId,
+          title: subjectForm.title,
+          code: subjectForm.code,
+          weightage: subjectForm.weightage
+        });
+      } else {
+        await adminAPI.createSubject({
+          exam_id: selectedExamId,
+          examId: selectedExamId,
+          title: subjectForm.title,
+          code: subjectForm.code,
+          weightage: subjectForm.weightage
+        });
+      }
       setShowSubjectModal(false);
-      setSubjectForm({ examId: selectedExamId, title: '', code: '', weightage: '10%' });
+      setSubjectForm({ id: null, examId: selectedExamId, title: '', code: '', weightage: '10%' });
       loadRoadmap(selectedExamId);
     } catch (err) {
-      alert('Failed to add subject');
+      alert('Failed to save subject');
     }
   };
 
@@ -357,6 +367,19 @@ export default function ManageExamsPage() {
                             </span>
 
                             <div style={{ display: 'flex', gap: '0.4rem' }}>
+                              <button onClick={() => {
+                                setSubjectForm({
+                                  id: sub.id,
+                                  examId: selectedExamId,
+                                  title: sub.name || sub.title || '',
+                                  code: sub.code || '',
+                                  weightage: sub.weightage || '10%'
+                                });
+                                setShowSubjectModal(true);
+                              }} className="btn btn-sm btn-secondary" style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem' }}>
+                                Edit
+                              </button>
+
                               <button onClick={() => {
                                 setTopicForm({ examId: selectedExamId, subjectId: sub.id, title: '', description: '', estimatedHours: 3, difficulty: 'intermediate' });
                                 setShowTopicModal(true);

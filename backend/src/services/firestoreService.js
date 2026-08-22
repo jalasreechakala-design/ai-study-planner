@@ -143,24 +143,152 @@ class FirestoreService {
     if (!db) return [];
 
     const snap = await db.collection('exams').doc(String(examId)).collection('subjects').get();
-    return this.querySnap(snap);
+    const examSubjects = this.querySnap(snap);
+    if (examSubjects.length > 0) return examSubjects;
+
+    // Fallback to top-level subjects
+    const globalSnap = await db.collection('subjects').get();
+    return this.querySnap(globalSnap);
+  }
+
+  async getSubjects(filter = {}) {
+    const db = this.firestore;
+    if (!db) return [];
+
+    if (filter.examId) {
+      return this.getExamSubjects(filter.examId);
+    }
+
+    const snap = await db.collection('subjects').get();
+    const globalList = this.querySnap(snap);
+    if (globalList.length > 0) return globalList;
+
+    // Fallback: search subcollections under exams if top-level subjects is empty
+    const examsSnap = await db.collection('exams').get();
+    const allSubjects = [];
+    for (const examDoc of examsSnap.docs) {
+      const subSnap = await examDoc.ref.collection('subjects').get();
+      subSnap.forEach(doc => allSubjects.push({ id: doc.id, examId: examDoc.id, ...doc.data() }));
+    }
+    return allSubjects;
   }
 
   async createExamSubject(examId, subjectData) {
     const db = this.firestore;
     if (!db) return null;
 
-    const ref = db.collection('exams').doc(String(examId)).collection('subjects').doc();
+    const titleVal = (subjectData.title || subjectData.subjectName || subjectData.name || '').trim();
+    const codeVal = (subjectData.code || subjectData.subjectCode || '').trim();
+    const branchVal = subjectData.branch || 'General';
+    const semVal = subjectData.semester || 'Semester 1';
+    const descVal = subjectData.description || '';
+    const weightageVal = subjectData.weightage || '';
+
+    const ref = examId ? db.collection('exams').doc(String(examId)).collection('subjects').doc() : db.collection('subjects').doc();
     const docData = {
       id: ref.id,
-      examId: String(examId),
-      title: subjectData.title,
-      code: subjectData.code || '',
-      weightage: subjectData.weightage || '',
-      createdAt: new Date().toISOString()
+      examId: examId ? String(examId) : '1',
+      title: titleVal,
+      name: titleVal,
+      subjectName: titleVal,
+      code: codeVal,
+      subjectCode: codeVal,
+      branch: branchVal,
+      semester: semVal,
+      description: descVal,
+      weightage: weightageVal,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     await ref.set(docData);
+
+    // Also mirror to global subjects collection for student display
+    await db.collection('subjects').doc(ref.id).set(docData, { merge: true }).catch(() => null);
     return docData;
+  }
+
+  async createSubject(subjectData) {
+    const examId = subjectData.examId || subjectData.exam_id;
+    return this.createExamSubject(examId, subjectData);
+  }
+
+  async updateSubject(subjectId, updateData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const examId = updateData.examId || updateData.exam_id;
+    const titleVal = updateData.title || updateData.subjectName || updateData.name;
+    const codeVal = updateData.code || updateData.subjectCode;
+
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (titleVal) {
+      updateFields.title = titleVal;
+      updateFields.name = titleVal;
+      updateFields.subjectName = titleVal;
+    }
+    if (codeVal !== undefined) {
+      updateFields.code = codeVal;
+      updateFields.subjectCode = codeVal;
+    }
+    if (updateData.branch !== undefined) updateFields.branch = updateData.branch;
+    if (updateData.semester !== undefined) updateFields.semester = updateData.semester;
+    if (updateData.description !== undefined) updateFields.description = updateData.description;
+    if (updateData.weightage !== undefined) updateFields.weightage = updateData.weightage;
+
+    // Update global collection
+    await db.collection('subjects').doc(String(subjectId)).set(updateFields, { merge: true }).catch(() => null);
+
+    // Update exam subcollection if applicable
+    if (examId) {
+      await db.collection('exams').doc(String(examId)).collection('subjects').doc(String(subjectId)).set(updateFields, { merge: true }).catch(() => null);
+    } else {
+      // Find and update across exams if needed
+      const examsSnap = await db.collection('exams').get();
+      for (const examDoc of examsSnap.docs) {
+        const subRef = examDoc.ref.collection('subjects').doc(String(subjectId));
+        const subSnap = await subRef.get();
+        if (subSnap.exists) {
+          await subRef.set(updateFields, { merge: true });
+        }
+      }
+    }
+
+    return { id: String(subjectId), ...updateFields };
+  }
+
+  async deleteExamSubject(examId, subjectId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('subjects').doc(String(subjectId)).delete().catch(() => null);
+    if (examId) {
+      await db.collection('exams').doc(String(examId)).collection('subjects').doc(String(subjectId)).delete().catch(() => null);
+    }
+  }
+
+  async deleteSubject(subjectId, examId = null) {
+    return this.deleteExamSubject(examId, subjectId);
+  }
+
+  async getUserSubjects(userId) {
+    const db = this.firestore;
+    if (!db) return [];
+
+    // 1. Fetch student's custom subjects
+    const snap = await db.collection('users').doc(String(userId)).collection('subjects').get().catch(() => ({ docs: [] }));
+    const userSubjects = this.querySnap(snap);
+
+    // 2. Fetch admin global subjects
+    const globalSubjects = await this.getSubjects().catch(() => []);
+
+    // Merge without duplicates
+    const subjectMap = new Map();
+    globalSubjects.forEach(s => subjectMap.set(s.id || s.subjectName || s.title, s));
+    userSubjects.forEach(s => subjectMap.set(s.id || s.subjectName || s.title, s));
+
+    return Array.from(subjectMap.values());
   }
 
   async getTopics(examId, subjectId) {
@@ -169,8 +297,13 @@ class FirestoreService {
 
     const snap = await db.collection('exams').doc(String(examId))
       .collection('subjects').doc(String(subjectId))
-      .collection('topics').orderBy('orderIndex', 'asc').get();
-    return this.querySnap(snap);
+      .collection('topics').orderBy('orderIndex', 'asc').get().catch(() => null);
+    
+    if (snap) return this.querySnap(snap);
+
+    // Fallback: search topics directly under subject
+    const directSnap = await db.collection('subjects').doc(String(subjectId)).collection('topics').get().catch(() => ({ docs: [] }));
+    return this.querySnap(directSnap);
   }
 
   async createTopic(examId, subjectId, topicData) {
@@ -185,7 +318,8 @@ class FirestoreService {
       id: ref.id,
       examId: String(examId),
       subjectId: String(subjectId),
-      title: topicData.title,
+      title: topicData.title || topicData.name,
+      name: topicData.title || topicData.name,
       description: topicData.description || '',
       estimatedHours: Number(topicData.estimatedHours || 3),
       orderIndex: Number(topicData.orderIndex || 1),
@@ -195,6 +329,38 @@ class FirestoreService {
     return docData;
   }
 
+  async updateTopic(examId, subjectId, topicId, topicData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('exams').doc(String(examId))
+      .collection('subjects').doc(String(subjectId))
+      .collection('topics').doc(String(topicId));
+
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (topicData.title || topicData.name) {
+      updateFields.title = topicData.title || topicData.name;
+      updateFields.name = topicData.title || topicData.name;
+    }
+    if (topicData.description !== undefined) updateFields.description = topicData.description;
+    if (topicData.estimatedHours !== undefined) updateFields.estimatedHours = Number(topicData.estimatedHours);
+    if (topicData.orderIndex !== undefined) updateFields.orderIndex = Number(topicData.orderIndex);
+
+    await ref.set(updateFields, { merge: true });
+    return { id: String(topicId), ...updateFields };
+  }
+
+  async deleteTopic(examId, subjectId, topicId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('exams').doc(String(examId))
+      .collection('subjects').doc(String(subjectId))
+      .collection('topics').doc(String(topicId)).delete();
+  }
+
   async getSubtopics(examId, subjectId, topicId) {
     const db = this.firestore;
     if (!db) return [];
@@ -202,7 +368,7 @@ class FirestoreService {
     const snap = await db.collection('exams').doc(String(examId))
       .collection('subjects').doc(String(subjectId))
       .collection('topics').doc(String(topicId))
-      .collection('subtopics').orderBy('orderIndex', 'asc').get();
+      .collection('subtopics').orderBy('orderIndex', 'asc').get().catch(() => ({ docs: [] }));
     return this.querySnap(snap);
   }
 
@@ -218,13 +384,47 @@ class FirestoreService {
     const docData = {
       id: ref.id,
       topicId: String(topicId),
-      title: subtopicData.title,
+      title: subtopicData.title || subtopicData.name,
+      name: subtopicData.title || subtopicData.name,
       description: subtopicData.description || '',
       orderIndex: Number(subtopicData.orderIndex || 1),
       createdAt: new Date().toISOString()
     };
     await ref.set(docData);
     return docData;
+  }
+
+  async updateSubtopic(examId, subjectId, topicId, subtopicId, subtopicData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('exams').doc(String(examId))
+      .collection('subjects').doc(String(subjectId))
+      .collection('topics').doc(String(topicId))
+      .collection('subtopics').doc(String(subtopicId));
+
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (subtopicData.title || subtopicData.name) {
+      updateFields.title = subtopicData.title || subtopicData.name;
+      updateFields.name = subtopicData.title || subtopicData.name;
+    }
+    if (subtopicData.description !== undefined) updateFields.description = subtopicData.description;
+    if (subtopicData.orderIndex !== undefined) updateFields.orderIndex = Number(subtopicData.orderIndex);
+
+    await ref.set(updateFields, { merge: true });
+    return { id: String(subtopicId), ...updateFields };
+  }
+
+  async deleteSubtopic(examId, subjectId, topicId, subtopicId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('exams').doc(String(examId))
+      .collection('subjects').doc(String(subjectId))
+      .collection('topics').doc(String(topicId))
+      .collection('subtopics').doc(String(subtopicId)).delete();
   }
 
   // ==========================================
@@ -2691,6 +2891,119 @@ class FirestoreService {
       }
     };
   }
+
+  async updateQuestion(questionId, qData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('questions').doc(String(questionId));
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (qData.questionText || qData.question_text) updateFields.questionText = qData.questionText || qData.question_text;
+    if (qData.optionA || qData.option_a) updateFields.optionA = qData.optionA || qData.option_a;
+    if (qData.optionB || qData.option_b) updateFields.optionB = qData.optionB || qData.option_b;
+    if (qData.optionC || qData.option_c) updateFields.optionC = qData.optionC || qData.option_c;
+    if (qData.optionD || qData.option_d) updateFields.optionD = qData.optionD || qData.option_d;
+    if (qData.correctOption || qData.correct_option) updateFields.correctOption = qData.correctOption || qData.correct_option;
+    if (qData.explanation !== undefined) updateFields.explanation = qData.explanation;
+    if (qData.difficulty !== undefined) updateFields.difficulty = qData.difficulty;
+
+    await ref.set(updateFields, { merge: true });
+    return { id: String(questionId), ...updateFields };
+  }
+
+  async deleteQuestion(questionId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('questions').doc(String(questionId)).delete();
+  }
+
+  async createQuiz(quizData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('quizzes').doc();
+    const docData = {
+      id: ref.id,
+      title: quizData.title,
+      examId: quizData.examId ? String(quizData.examId) : '1',
+      subjectId: quizData.subjectId ? String(quizData.subjectId) : null,
+      timeLimitMins: Number(quizData.timeLimitMins || 15),
+      totalMarks: Number(quizData.totalMarks || 10),
+      createdBy: quizData.createdBy || 'admin_1',
+      createdAt: new Date().toISOString()
+    };
+    await ref.set(docData);
+    return docData;
+  }
+
+  async updateQuiz(quizId, quizData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('quizzes').doc(String(quizId));
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (quizData.title) updateFields.title = quizData.title;
+    if (quizData.timeLimitMins !== undefined) updateFields.timeLimitMins = Number(quizData.timeLimitMins);
+    if (quizData.totalMarks !== undefined) updateFields.totalMarks = Number(quizData.totalMarks);
+
+    await ref.set(updateFields, { merge: true });
+    return { id: String(quizId), ...updateFields };
+  }
+
+  async deleteQuiz(quizId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('quizzes').doc(String(quizId)).delete();
+  }
+
+  async createMockTest(mockData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('mock_tests').doc();
+    const docData = {
+      id: ref.id,
+      title: mockData.title,
+      examId: mockData.examId ? String(mockData.examId) : '1',
+      durationMins: Number(mockData.durationMins || 60),
+      totalQuestions: Number(mockData.totalQuestions || 30),
+      passingScore: Number(mockData.passingScore || 50.0),
+      createdAt: new Date().toISOString()
+    };
+    await ref.set(docData);
+    return docData;
+  }
+
+  async updateMockTest(mockTestId, mockData) {
+    const db = this.firestore;
+    if (!db) return null;
+
+    const ref = db.collection('mock_tests').doc(String(mockTestId));
+    const updateFields = {
+      updatedAt: new Date().toISOString()
+    };
+    if (mockData.title) updateFields.title = mockData.title;
+    if (mockData.durationMins !== undefined) updateFields.durationMins = Number(mockData.durationMins);
+    if (mockData.totalQuestions !== undefined) updateFields.totalQuestions = Number(mockData.totalQuestions);
+    if (mockData.passingScore !== undefined) updateFields.passingScore = Number(mockData.passingScore);
+
+    await ref.set(updateFields, { merge: true });
+    return { id: String(mockTestId), ...updateFields };
+  }
+
+  async deleteMockTest(mockTestId) {
+    const db = this.firestore;
+    if (!db) return;
+
+    await db.collection('mock_tests').doc(String(mockTestId)).delete();
+  }
 }
 
 module.exports = new FirestoreService();
+

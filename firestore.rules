@@ -44,6 +44,12 @@ service cloud.firestore {
       }
     }
 
+    // Global Subjects Catalog
+    match /subjects/{subjectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
     // Learning Resources
     match /learning_resources/{resourceId} {
       allow read: if isAuthenticated();

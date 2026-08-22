@@ -56,12 +56,37 @@ function ProtectedRoute({ children, adminOnly = false }) {
 
 function MainLayout({ children }) {
   const { user } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const toggleMobile = () => setMobileOpen(!mobileOpen);
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <div className="app-container">
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Navbar />
-        <div style={{ display: 'flex', flex: 1 }}>
-          {user && <Sidebar />}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <Navbar onToggleMobileMenu={toggleMobile} />
+        <div style={{ display: 'flex', flex: 1, position: 'relative', minWidth: 0 }}>
+          {user && (
+            <>
+              {mobileOpen && (
+                <div
+                  className="sidebar-backdrop"
+                  onClick={closeMobile}
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    backdropFilter: 'blur(4px)',
+                    zIndex: 85
+                  }}
+                />
+              )}
+              <Sidebar mobileOpen={mobileOpen} onCloseMobile={closeMobile} />
+            </>
+          )}
           <main className="main-content">
             {children}
           </main>
